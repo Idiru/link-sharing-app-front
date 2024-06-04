@@ -1,4 +1,4 @@
-import '../src/Styles/LoginPage.css'
+import '../src/styles/pages/LoginPage.css'
 function loginPage() {
     return (
         <div className="login-container">
