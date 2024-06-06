@@ -1,9 +1,43 @@
 import PrimaryButton from "../src/components/PrimaryButton";
 import "../src/styles/pages/SignupPage.css";
-import { Link } from 'react-router-dom'; 
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import axios from "axios";
+
+const API_URL = "http://localhost:5005";
+
+function SignupPage() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [repeatedPassword, setRepeatedPassword] = useState("");
+  const [userName, setUsername] = useState("");
+  const [errorMessage, setErrorMessage] = useState(undefined);
+
+  const navigate = useNavigate();
+
+  const handleEmail = (e) => setEmail(e.target.value);
+  const handlePassword = (e) => setPassword(e.target.value);
+  const handleRepeatedPassword = (e) => setRepeatedPassword(e.target.value);
+  const handleUserName = (e) => setUsername(e.target.value);
+
+  const handleSignupSubmit = (e) => {
+    e.preventDefault()
+
+    const reqBody = {userName, email, password, repeatedPassword}
+
+    axios.post(`${API_URL}/auth/signup`, reqBody)
+        .then((res) => {
+            navigate('/signup-validation')
+        })
+        .catch ((err) => {
+            const errDescription = error.res.data.message
+            setErrorMessage(errDescription)
+        })
 
 
-function loginPage() {
+
+  };
+
   return (
     <div className="container">
       <div className="logo-container">
@@ -15,8 +49,8 @@ function loginPage() {
           fill="none"
         >
           <path
-            fill-rule="evenodd"
-            clip-rule="evenodd"
+            fillRule="evenodd"
+            clipRule="evenodd"
             d="M5.7735 34.2252C8.21683 36.6668 12.1435 36.6668 20.0002 36.6668C27.8568 36.6668 31.7852 36.6668 34.2252 34.2252C36.6668 31.7868 36.6668 27.8568 36.6668 20.0002C36.6668 12.1435 36.6668 8.21516 34.2252 5.7735C31.7868 3.3335 27.8568 3.3335 20.0002 3.3335C12.1435 3.3335 8.21516 3.3335 5.7735 5.7735C3.3335 8.21683 3.3335 12.1435 3.3335 20.0002C3.3335 27.8568 3.3335 31.7852 5.7735 34.2252ZM15.8335 14.5835C14.7622 14.5835 13.7149 14.9012 12.8242 15.4964C11.9334 16.0916 11.2391 16.9375 10.8291 17.9273C10.4192 18.9171 10.3119 20.0062 10.5209 21.0569C10.7299 22.1076 11.2458 23.0728 12.0033 23.8303C12.7609 24.5879 13.726 25.1037 14.7768 25.3127C15.8275 25.5218 16.9166 25.4145 17.9064 25.0045C18.8961 24.5945 19.7421 23.9003 20.3373 23.0095C20.9325 22.1187 21.2502 21.0715 21.2502 20.0002C21.2502 19.6686 21.3819 19.3507 21.6163 19.1163C21.8507 18.8819 22.1686 18.7502 22.5002 18.7502C22.8317 18.7502 23.1496 18.8819 23.384 19.1163C23.6185 19.3507 23.7502 19.6686 23.7502 20.0002C23.7502 21.5659 23.2859 23.0965 22.416 24.3984C21.5461 25.7003 20.3097 26.715 18.8631 27.3142C17.4165 27.9134 15.8247 28.0702 14.289 27.7647C12.7533 27.4592 11.3427 26.7053 10.2356 25.5981C9.1284 24.4909 8.37441 23.0803 8.06895 21.5446C7.76348 20.0089 7.92026 18.4172 8.51945 16.9706C9.11864 15.524 10.1333 14.2876 11.4352 13.4177C12.7371 12.5478 14.2677 12.0835 15.8335 12.0835C16.165 12.0835 16.483 12.2152 16.7174 12.4496C16.9518 12.684 17.0835 13.002 17.0835 13.3335C17.0835 13.665 16.9518 13.983 16.7174 14.2174C16.483 14.4518 16.165 14.5835 15.8335 14.5835ZM29.5835 20.0002C29.5835 21.4368 29.0128 22.8145 27.997 23.8303C26.9812 24.8461 25.6034 25.4168 24.1668 25.4168C23.8353 25.4168 23.5174 25.5485 23.2829 25.7829C23.0485 26.0174 22.9168 26.3353 22.9168 26.6668C22.9168 26.9984 23.0485 27.3163 23.2829 27.5507C23.5174 27.7851 23.8353 27.9168 24.1668 27.9168C25.7326 27.9168 27.2632 27.4525 28.5651 26.5826C29.867 25.7127 30.8817 24.4763 31.4809 23.0297C32.0801 21.5832 32.2368 19.9914 31.9314 18.4557C31.6259 16.92 30.8719 15.5094 29.7648 14.4022C28.6576 13.2951 27.247 12.5411 25.7113 12.2356C24.1756 11.9301 22.5838 12.0869 21.1373 12.6861C19.6907 13.2853 18.4543 14.3 17.5844 15.6019C16.7145 16.9038 16.2502 18.4344 16.2502 20.0002C16.2502 20.3317 16.3819 20.6496 16.6163 20.884C16.8507 21.1185 17.1686 21.2502 17.5002 21.2502C17.8317 21.2502 18.1496 21.1185 18.384 20.884C18.6185 20.6496 18.7502 20.3317 18.7502 20.0002C18.7502 18.5636 19.3208 17.1858 20.3367 16.17C21.3525 15.1542 22.7302 14.5835 24.1668 14.5835C25.6034 14.5835 26.9812 15.1542 27.997 16.17C29.0128 17.1858 29.5835 18.5636 29.5835 20.0002Z"
             fill="#633CFF"
           />
@@ -67,8 +101,31 @@ function loginPage() {
         <p className="description">
           Let’s get you started sharing your links!{" "}
         </p>
-        <form action="/submit-email" method="POST">
-          <label for="email">Email address</label>
+        <form onSubmit={handleSignupSubmit}>
+          <label >Username</label>
+          <div className="input-container">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 17 17"
+              fill="none"
+            >
+              <path
+                d="M8.4375 0C6.76872 0 5.13742 0.494851 3.74988 1.42198C2.36234 2.3491 1.28088 3.66686 0.64227 5.20861C0.00365585 6.75036 -0.163435 8.44686 0.162128 10.0836C0.487691 11.7203 1.29129 13.2237 2.47129 14.4037C3.6513 15.5837 5.15471 16.3873 6.79143 16.7129C8.42814 17.0384 10.1246 16.8713 11.6664 16.2327C13.2081 15.5941 14.5259 14.5127 15.453 13.1251C16.3802 11.7376 16.875 10.1063 16.875 8.4375C16.8725 6.2005 15.9828 4.05583 14.401 2.47403C12.8192 0.892227 10.6745 0.00248142 8.4375 0ZM4.65391 13.7945C5.08912 13.1994 5.65857 12.7154 6.31599 12.3817C6.9734 12.0481 7.70026 11.8742 8.4375 11.8742C9.17475 11.8742 9.9016 12.0481 10.559 12.3817C11.2164 12.7154 11.7859 13.1994 12.2211 13.7945C11.1153 14.5787 9.79315 15 8.4375 15C7.08186 15 5.75971 14.5787 4.65391 13.7945ZM6.25 7.8125C6.25 7.37985 6.3783 6.95692 6.61866 6.59719C6.85903 6.23746 7.20067 5.95708 7.60038 5.79151C8.0001 5.62595 8.43993 5.58263 8.86426 5.66703C9.2886 5.75144 9.67837 5.95978 9.9843 6.2657C10.2902 6.57163 10.4986 6.96141 10.583 7.38574C10.6674 7.81007 10.6241 8.24991 10.4585 8.64962C10.2929 9.04933 10.0125 9.39097 9.65281 9.63134C9.29308 9.8717 8.87015 10 8.4375 10C7.85734 10 7.30094 9.76953 6.89071 9.3593C6.48047 8.94906 6.25 8.39266 6.25 7.8125ZM13.5938 12.4953C12.9861 11.7224 12.2116 11.097 11.3281 10.6656C11.8912 10.0955 12.273 9.37152 12.4256 8.58488C12.5783 7.79824 12.4948 6.98403 12.1859 6.24468C11.8769 5.50533 11.3562 4.87387 10.6892 4.42973C10.0222 3.9856 9.23882 3.74862 8.4375 3.74862C7.63619 3.74862 6.85278 3.9856 6.18581 4.42973C5.51885 4.87387 4.99812 5.50533 4.68915 6.24468C4.38017 6.98403 4.29675 7.79824 4.44937 8.58488C4.60199 9.37152 4.98384 10.0955 5.54688 10.6656C4.66342 11.097 3.8889 11.7224 3.28125 12.4953C2.51801 11.5278 2.04262 10.3649 1.9095 9.13975C1.77638 7.91461 1.99091 6.67675 2.52854 5.56787C3.06617 4.45898 3.90517 3.52389 4.94949 2.86962C5.99381 2.21536 7.20125 1.86836 8.4336 1.86836C9.66594 1.86836 10.8734 2.21536 11.9177 2.86962C12.962 3.52389 13.801 4.45898 14.3387 5.56787C14.8763 6.67675 15.0908 7.91461 14.9577 9.13975C14.8246 10.3649 14.3492 11.5278 13.5859 12.4953H13.5938Z"
+                fill="#737373"
+              />
+            </svg>
+            <input
+              type="name"
+              id="email"
+              placeholder="John Doe"
+              name="email"
+              onChange={handleUserName}
+              required
+            />
+          </div>
+          <label>Email address</label>
           <div className="input-container">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -87,10 +144,11 @@ function loginPage() {
               id="email"
               placeholder="e.g. alex@email.com"
               name="email"
+              onChange={handleEmail}
               required
             />
-          </div>{" "}
-          <label for="email">Create password</label>
+          </div>
+          <label>Create password</label>
           <div className="input-container">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -108,10 +166,11 @@ function loginPage() {
               type="password"
               placeholder="At least .8 characters"
               name="password"
+              onChange={handlePassword}
               required
             />
           </div>
-          <label for="email">Confirm password</label>
+          <label>Confirm password</label>
           <div className="input-container">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -129,19 +188,22 @@ function loginPage() {
               type="password"
               placeholder="At least .8 characters"
               name="password-repeat"
+              onChange={handleRepeatedPassword}
               required
             />
           </div>{" "}
-          <p className="password-notice">Password must contain at least 8 characters</p>
-          <PrimaryButton type={"submit"} text={"Create new account"} />
+          <p className="password-notice">
+            Password must contain at least 8 characters
+          </p>
+          <PrimaryButton type={"submit"} text={"Create new account"} link="/signup-validation" />
         </form>
         <div className="already-account-container">
-        <p>Already have an account?</p>
-        <Link to="/login">Login</Link>
+          <p>Already have an account?</p>
+          <Link to="/login">Login</Link>
         </div>
       </div>
     </div>
   );
 }
 
-export default loginPage;
+export default SignupPage;
