@@ -5,12 +5,12 @@
   justify-content: center
 }
 
-.logo-container-validation-page {
-  padding-bottom: 40px;
+.validation-page-logo-container {
+  padding-bottom: 32px;
 }
 
-.card-container-validation-page {
-  max-width: 719px;
+.signup-validation-description {
+  padding-bottom: 8px;
 }
 
 .validation-page button {
@@ -18,7 +18,8 @@
 }
 
 @media (min-width: 769px) {
-  .logo-container-validation-page {
-    padding-bottom: 68px;
+  .validation-page-card-container {
+    width: 650px;
+  
   }
 }

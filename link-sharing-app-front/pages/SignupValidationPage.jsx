@@ -4,16 +4,18 @@ import Confetti from "react-confetti";
 import { useWindowSize } from "react-use";
 import { Link } from "react-router-dom";
 
-
-
-function SignupPage() {
+function SignupValidationPage() {
   const { width, height } = useWindowSize();
 
-
   return (
-    <div className="container validation-page">
-      <Confetti width={width} height={height} recycle={false} numberOfPieces={3000} />
-      <div className="logo-container logo-container-validation-page">
+    <div className="signup-container validation-page">
+      <Confetti
+        width={width}
+        height={height}
+        recycle={false}
+        numberOfPieces={3000}
+      />
+      <div className="signup-logo-container validation-page-logo-container">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="40"
@@ -69,18 +71,20 @@ function SignupPage() {
           />
         </svg>
       </div>
-      <div className="card-container card-container-validation-page">
+      <div className="signup-card-container validation-page-card-container">
         <h2>Your account was successfully created!&ensp;🎊 </h2>
-        <p className="description">
+        <p className="signup-description signup-validation-description">
           Congratulations on setting up your account! You're all set to begin.{" "}
-          <br />
+          <br /> <br />
           Please log in now to access your new account and start enjoying all
           the features we have to offer.
         </p>
-        <button className="primary-button"><Link to="/login">Login</Link></button>
+        <button className="signup-primary-button primary-button">
+          <Link to="/login">Login</Link>
+        </button>
       </div>
     </div>
   );
 }
 
-export default SignupPage;
+export default SignupValidationPage;
