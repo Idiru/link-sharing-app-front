@@ -1,9 +1,42 @@
-import PrimaryButton from "../src/components/PrimaryButton";
 import "../src/styles/pages/SignupPage.css";
-import { Link } from 'react-router-dom'; 
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import axios from "axios";
+
+const API_URL = "http://localhost:5005";
+
+function SignupPage() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [repeatedPassword, setRepeatedPassword] = useState("");
+  const [userName, setUsername] = useState("");
+  const [errorMessage, setErrorMessage] = useState(undefined);
+
+  const navigate = useNavigate();
+
+  const handleEmail = (e) => setEmail(e.target.value);
+  const handlePassword = (e) => setPassword(e.target.value);
+  const handleRepeatedPassword = (e) => setRepeatedPassword(e.target.value);
+  const handleUserName = (e) => setUsername(e.target.value);
+
+  const handleSignupSubmit = (e) => {
+    e.preventDefault()
+
+    const reqBody = {userName, email, password, repeatedPassword}
+
+    axios.post(`${API_URL}/auth/signup`, reqBody)
+        .then((res) => {
+            navigate('/signup-validation')
+        })
+        .catch ((err) => {
+            const errDescription = error.res.data.message
+            setErrorMessage(errDescription)
+        })
 
 
-function loginPage() {
+
+  };
+
   return (
     <div className="container">
       <div className="logo-container">
@@ -67,8 +100,31 @@ function loginPage() {
         <p className="description">
           Let’s get you started sharing your links!{" "}
         </p>
-        <form action="/submit-email" method="POST">
-          <label htmlFor="email">Email address</label>
+        <form onSubmit={handleSignupSubmit}>
+          <label >Username</label>
+          <div className="input-container">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 17 17"
+              fill="none"
+            >
+              <path
+                d="M8.4375 0C6.76872 0 5.13742 0.494851 3.74988 1.42198C2.36234 2.3491 1.28088 3.66686 0.64227 5.20861C0.00365585 6.75036 -0.163435 8.44686 0.162128 10.0836C0.487691 11.7203 1.29129 13.2237 2.47129 14.4037C3.6513 15.5837 5.15471 16.3873 6.79143 16.7129C8.42814 17.0384 10.1246 16.8713 11.6664 16.2327C13.2081 15.5941 14.5259 14.5127 15.453 13.1251C16.3802 11.7376 16.875 10.1063 16.875 8.4375C16.8725 6.2005 15.9828 4.05583 14.401 2.47403C12.8192 0.892227 10.6745 0.00248142 8.4375 0ZM4.65391 13.7945C5.08912 13.1994 5.65857 12.7154 6.31599 12.3817C6.9734 12.0481 7.70026 11.8742 8.4375 11.8742C9.17475 11.8742 9.9016 12.0481 10.559 12.3817C11.2164 12.7154 11.7859 13.1994 12.2211 13.7945C11.1153 14.5787 9.79315 15 8.4375 15C7.08186 15 5.75971 14.5787 4.65391 13.7945ZM6.25 7.8125C6.25 7.37985 6.3783 6.95692 6.61866 6.59719C6.85903 6.23746 7.20067 5.95708 7.60038 5.79151C8.0001 5.62595 8.43993 5.58263 8.86426 5.66703C9.2886 5.75144 9.67837 5.95978 9.9843 6.2657C10.2902 6.57163 10.4986 6.96141 10.583 7.38574C10.6674 7.81007 10.6241 8.24991 10.4585 8.64962C10.2929 9.04933 10.0125 9.39097 9.65281 9.63134C9.29308 9.8717 8.87015 10 8.4375 10C7.85734 10 7.30094 9.76953 6.89071 9.3593C6.48047 8.94906 6.25 8.39266 6.25 7.8125ZM13.5938 12.4953C12.9861 11.7224 12.2116 11.097 11.3281 10.6656C11.8912 10.0955 12.273 9.37152 12.4256 8.58488C12.5783 7.79824 12.4948 6.98403 12.1859 6.24468C11.8769 5.50533 11.3562 4.87387 10.6892 4.42973C10.0222 3.9856 9.23882 3.74862 8.4375 3.74862C7.63619 3.74862 6.85278 3.9856 6.18581 4.42973C5.51885 4.87387 4.99812 5.50533 4.68915 6.24468C4.38017 6.98403 4.29675 7.79824 4.44937 8.58488C4.60199 9.37152 4.98384 10.0955 5.54688 10.6656C4.66342 11.097 3.8889 11.7224 3.28125 12.4953C2.51801 11.5278 2.04262 10.3649 1.9095 9.13975C1.77638 7.91461 1.99091 6.67675 2.52854 5.56787C3.06617 4.45898 3.90517 3.52389 4.94949 2.86962C5.99381 2.21536 7.20125 1.86836 8.4336 1.86836C9.66594 1.86836 10.8734 2.21536 11.9177 2.86962C12.962 3.52389 13.801 4.45898 14.3387 5.56787C14.8763 6.67675 15.0908 7.91461 14.9577 9.13975C14.8246 10.3649 14.3492 11.5278 13.5859 12.4953H13.5938Z"
+                fill="#737373"
+              />
+            </svg>
+            <input
+              type="name"
+              id="email"
+              placeholder="John Doe"
+              name="email"
+              onChange={handleUserName}
+              required
+            />
+          </div>
+          <label>Email address</label>
           <div className="input-container">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -87,10 +143,11 @@ function loginPage() {
               id="email"
               placeholder="e.g. alex@email.com"
               name="email"
+              onChange={handleEmail}
               required
             />
-          </div>{" "}
-          <label htmlFor="email">Create password</label>
+          </div>
+          <label>Create password</label>
           <div className="input-container">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -108,10 +165,11 @@ function loginPage() {
               type="password"
               placeholder="At least .8 characters"
               name="password"
+              onChange={handlePassword}
               required
             />
           </div>
-          <label htmlFor="email">Confirm password</label>
+          <label>Confirm password</label>
           <div className="input-container">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -129,19 +187,23 @@ function loginPage() {
               type="password"
               placeholder="At least .8 characters"
               name="password-repeat"
+              onChange={handleRepeatedPassword}
               required
             />
           </div>{" "}
-          <p className="password-notice">Password must contain at least 8 characters</p>
-          <PrimaryButton type={"submit"} text={"Create new account"} />
+          <p className="password-notice">
+            Password must contain at least 8 characters
+          </p>
+          <button type={"submit"} className="primary-button">Create new account</button>
+
         </form>
         <div className="already-account-container">
-        <p>Already have an account?</p>
-        <Link to="/login">Login</Link>
+          <p>Already have an account?</p>
+          <Link to="/login">Login</Link>
         </div>
       </div>
     </div>
   );
 }
 
-export default loginPage;
+export default SignupPage;

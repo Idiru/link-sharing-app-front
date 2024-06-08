@@ -15,6 +15,10 @@ body {
   padding-bottom: 68px;
 }
 
+h2 {
+  font-size: 24px;
+}
+
 .description {
   padding-bottom: 40px;
   color: #737373;
@@ -35,12 +39,12 @@ input {
   border-radius: 8px;
   border: 1px solid var(--Borders, #d9d9d9);
   background: #fff;
-  padding-left: 40px; 
+  padding-left: 40px;
   width: 279px;
 }
 
 ::placeholder {
-    opacity: 0.7;
+  opacity: 0.7;
 }
 
 .input-container {
@@ -49,17 +53,15 @@ input {
 }
 
 .input-container svg {
-    position: absolute;
-    left: 5%; /* Ou à droite, en fonction de l'emplacement souhaité */
-    top: 30%;
-    transform: translateY(-50%);
-
+  position: absolute;
+  left: 5%; /* Ou à droite, en fonction de l'emplacement souhaité */
+  top: 30%;
+  transform: translateY(-50%);
 }
 
 .password-notice {
-    color: var(--Grey, #737373);
-    font-size: 12px;
-
+  color: var(--Grey, #737373);
+  font-size: 12px;
 }
 
 .primary-button {
@@ -67,12 +69,37 @@ input {
 }
 
 .already-account-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-bottom: 64px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.already-account-container p{
-    color: #737373;
+.already-account-container p {
+  color: #737373;
+}
+
+@media (min-width: 768px) {
+  h2 {
+    font-size: 32px;
+  }
+
+  body {
+    background-color: #fafafa;
+  }
+  .card-container {
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 12px;
+  }
+
+  .logo-container {
+    justify-content: center;
+    padding-bottom: 51px;
+  }
+
+  .already-account-container {
+    justify-content: center;
+    flex-direction: row;
+    gap: 5px;
+  }
 }

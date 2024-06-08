@@ -1,0 +1,24 @@
+.validation-page {
+  text-align: center;
+  align-items: center;
+  height: 100vh;
+  justify-content: center
+}
+
+.logo-container-validation-page {
+  padding-bottom: 40px;
+}
+
+.card-container-validation-page {
+  max-width: 719px;
+}
+
+.validation-page button {
+  width: 210px;
+}
+
+@media (min-width: 769px) {
+  .logo-container-validation-page {
+    padding-bottom: 68px;
+  }
+}

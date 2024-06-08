@@ -5,11 +5,9 @@ import { useContext } from 'react'
 import HomePage from '../pages/HomePage'
 import LoginPage from '../pages/LoginPage'
 import SignupPage from '../pages/SignupPage'
-import Anonymous from './components/Anonymous'
-import Private from './components/Private'
-/* import { Provider } from 'react-redux';
-import store from "../src/redux/store.js";
- */
+import SignupValidationPage from '../pages/SignupValidationPage'
+
+
 function App() {
 
   return (
@@ -19,6 +17,7 @@ function App() {
         <Route path='/' element={<Private><HomePage /></Private>} />
         <Route path='/login' element={<Anonymous><LoginPage /></Anonymous>} />
         <Route path='/signup' element={<SignupPage />} />
+        <Route path='/signup-validation' element={<SignupValidationPage />} />
       </Routes>
 
 
