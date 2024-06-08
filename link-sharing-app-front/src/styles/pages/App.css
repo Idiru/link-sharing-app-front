@@ -85,3 +85,10 @@ input:focus {
   font-weight: 600;
   line-height: 150%;
 }
+
+.primary-button a:hover {
+  color: #fff;
+
+}
+
+
