@@ -1,15 +1,15 @@
 .navbar-logo-container {
     display: flex;
     align-items: center;
+    cursor: pointer;
+    width: 150px;
+
 }
 
 .logo-typo{
     display: none;
 }
 
-.navbar-menu-container {
-
-}
 
 .navbar-menu {
     height: 32px;
@@ -29,4 +29,16 @@
 
 .navbar-logout {
     color: #633CFF;
+}
+
+@media (min-width: 768px) {
+    .logo-typo{
+        display: block;
+    }
+
+    .navbar-logo-container {
+        display: flex;
+        gap: 5px;
+    }
+    
 }

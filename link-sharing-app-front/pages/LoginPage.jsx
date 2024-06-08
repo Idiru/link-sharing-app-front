@@ -2,6 +2,8 @@ import { useState, useContext } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../src/context/auth.context";
+import Button from "@mui/material/Button";
+import Snackbar from "@mui/material/Snackbar";
 
 const API_URL = "http://localhost:5005";
 
@@ -9,6 +11,7 @@ function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState(undefined);
+  const [open, setOpen] = useState(false);
 
   const navigate = useNavigate();
 
@@ -38,7 +41,20 @@ function LoginPage() {
       .catch((error) => {
         const errorDescription = error.response.data.message;
         setErrorMessage(errorDescription);
+        setOpen(true);
       });
+  };
+
+  const handleClick = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
   };
 
   return (
@@ -142,18 +158,32 @@ function LoginPage() {
             </svg>{" "}
             <input
               className="signup-input"
-              type="text"
+              type="password"
               onChange={handlePassword}
               placeholder="Enter your password"
             />
           </div>
-          <button className="primary-button signup-primary-button">Login</button>
+          <button className="primary-button signup-primary-button">
+            Login
+          </button>
           <div className="signup-already-account-container">
-            <p>Don't have Account yet ? <Link to="/login">Create account</Link></p>
+            <p>
+              Don't have Account yet ? <Link to="/signup">Create account</Link>
+            </p>
           </div>
         </form>
-        {errorMessage && <p className="error-message">{errorMessage}</p>}
       </div>
+      <Snackbar
+        sx={{
+          ".css-1eqdgzv-MuiPaper-root-MuiSnackbarContent-root": {
+            backgroundColor: "#FF3939",
+          },
+        }}
+        open={open}
+        autoHideDuration={5000}
+        onClose={handleClose}
+        message={errorMessage}
+      />
     </div>
   );
 }

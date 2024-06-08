@@ -12,6 +12,7 @@ import FormGroup from "@mui/material/FormGroup";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import "../styles/components/Navbar.css";
+import { useNavigate } from "react-router-dom";
 
 export default function MenuAppBar() {
   const [auth, setAuth] = React.useState(true);
@@ -29,6 +30,13 @@ export default function MenuAppBar() {
     setAnchorEl(null);
   };
 
+  const logout = () => {
+    localStorage.removeItem("authToken");
+    window.location.href = "/login";
+  };
+
+  const navigate = useNavigate();
+
   return (
     <Box
       sx={{
@@ -38,19 +46,15 @@ export default function MenuAppBar() {
           borderRadius: "12px",
           boxShadow: "none",
         },
+        "@media screen and (min-width: 768px)": {
+          margin: "24px"
+        }
       }}
     >
       <AppBar position="static">
         <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-          ></IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            <div className="navbar-logo-container">
+            <div className="navbar-logo-container" onClick={()=> navigate("/")}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="32"
@@ -67,8 +71,8 @@ export default function MenuAppBar() {
               </svg>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="136"
-                height="27"
+                width="108"
+                height="21"
                 viewBox="0 0 136 27"
                 fill="none"
                 className="logo-typo"
@@ -152,12 +156,11 @@ export default function MenuAppBar() {
                 top: "5%",
                 ".css-6hp17o-MuiList-root-MuiMenu-list": {
                   width: "124px",
-                  height: "101px",
                   padding: " 11px 27px",
                 },
                 ".css-3dzjca-MuiPaper-root-MuiPopover-paper-MuiMenu-paper": {
-                  borderRadius: "8px"
-                }
+                  borderRadius: "8px",
+                },
               }}
               anchorEl={anchorEl}
               anchorOrigin={{
@@ -172,11 +175,19 @@ export default function MenuAppBar() {
               open={Boolean(anchorEl)}
               onClose={handleClose}
             >
-              <MenuItem onClick={handleClose} sx={{
-                 display: "flex",
-                justifyContent: "center",
-              }}>
-                <p className="navbar-menu-list navbar-logout">Logout</p>
+              <MenuItem
+                onClick={handleClose}
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                <p
+                  className="navbar-menu-list navbar-logout"
+                  onClick={() => logout()}
+                >
+                  Logout
+                </p>
               </MenuItem>
             </Menu>
           </div>
