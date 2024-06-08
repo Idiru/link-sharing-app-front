@@ -1,4 +1,3 @@
-import PrimaryButton from "../src/components/PrimaryButton";
 import "../src/styles/pages/SignupPage.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
@@ -195,7 +194,8 @@ function SignupPage() {
           <p className="password-notice">
             Password must contain at least 8 characters
           </p>
-          <PrimaryButton type={"submit"} text={"Create new account"} link="/signup-validation" />
+          <button type={"submit"} className="primary-button">Create new account</button>
+
         </form>
         <div className="already-account-container">
           <p>Already have an account?</p>

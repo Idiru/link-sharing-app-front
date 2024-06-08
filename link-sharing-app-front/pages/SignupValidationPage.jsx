@@ -1,8 +1,9 @@
-import PrimaryButton from "../src/components/PrimaryButton";
 import "../src/styles/pages/SignupPage.css";
 import "../src/styles/pages/SignupValidationPage.css";
 import Confetti from "react-confetti";
 import { useWindowSize } from "react-use";
+import { Link } from "react-router-dom";
+
 
 
 function SignupPage() {
@@ -76,7 +77,7 @@ function SignupPage() {
           Please log in now to access your new account and start enjoying all
           the features we have to offer.
         </p>
-        <PrimaryButton className="primary-button-validation-page" text={"Login"} link="/login" />
+        <button className="primary-button"><Link to="/login">Login</Link></button>
       </div>
     </div>
   );

@@ -1,17 +1,2 @@
-.primary-button {
-    border-radius: 8px;
-    background: #633cff;
-    color: #fff;
-    font-family: "Instrument Sans";
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 150%;
-  }
 
-.primary-button:hover {
-    background-color: #BEADFF;
-    box-shadow: 0px 0px 32px 0px rgba(99, 60, 255, 0.25);
-    border-color: #BEADFF;
-}  
   
