@@ -1,0 +1,32 @@
+.navbar-logo-container {
+    display: flex;
+    align-items: center;
+}
+
+.logo-typo{
+    display: none;
+}
+
+.navbar-menu-container {
+
+}
+
+.navbar-menu {
+    height: 32px;
+    background-color: #EFEBFF;
+    border-radius: 8px;
+
+}
+
+.navbar-logo-user {
+    padding-right: 10px;
+}
+
+.navbar-menu-list {
+    font-weight: bold;
+
+}
+
+.navbar-logout {
+    color: #633CFF;
+}
