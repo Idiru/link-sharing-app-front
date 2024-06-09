@@ -2,7 +2,6 @@ import { useState, useContext } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../src/context/auth.context";
-import Button from "@mui/material/Button";
 import Snackbar from "@mui/material/Snackbar";
 
 const API_URL = "http://localhost:5005";
