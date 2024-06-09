@@ -22,6 +22,10 @@
     padding-right: 10px;
 }
 
+.navbar-username {
+    display: none;
+}
+
 .navbar-menu-list {
     font-weight: bold;
 
@@ -31,6 +35,8 @@
     color: #633CFF;
 }
 
+
+
 @media (min-width: 768px) {
     .logo-typo{
         display: block;
@@ -39,6 +45,11 @@
     .navbar-logo-container {
         display: flex;
         gap: 5px;
+    }
+
+    .navbar-username {
+        display: block;
+        padding-right: 10px;
     }
     
 }

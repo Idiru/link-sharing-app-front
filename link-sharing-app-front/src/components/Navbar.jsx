@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useContext, useState, useEffect } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -13,10 +13,19 @@ import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import "../styles/components/Navbar.css";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { AuthContext } from "../context/auth.context";
+
 
 export default function MenuAppBar() {
   const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [userData, setuserData] = useState(null);
+
+
+  const API_URL = "http://localhost:5005";
+  const { storeToken, authenticateUser } = useContext(AuthContext);
+
 
   const handleChange = (event) => {
     setAuth(event.target.checked);
@@ -35,6 +44,25 @@ export default function MenuAppBar() {
     window.location.href = "/login";
   };
 
+  useEffect(() => {
+    const token = localStorage.getItem('authToken'); // Récupération du token du localStorage
+    if (token) {
+      axios.get(`${API_URL}/user/username`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+      .then(res => {
+        console.log('User Data:', res.data);
+        setuserData(res.data)
+      })
+      .catch(error => {
+        const errorDescription = error.res ? error.res.data.message : 'Network Error';
+        console.error('Error fetching user:', errorDescription);
+      });
+    }
+  }, []);
+
   const navigate = useNavigate();
 
   return (
@@ -47,14 +75,17 @@ export default function MenuAppBar() {
           boxShadow: "none",
         },
         "@media screen and (min-width: 768px)": {
-          margin: "24px"
-        }
+          margin: "24px",
+        },
       }}
     >
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            <div className="navbar-logo-container" onClick={()=> navigate("/")}>
+            <div
+              className="navbar-logo-container"
+              onClick={() => navigate("/")}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="32"
@@ -112,7 +143,7 @@ export default function MenuAppBar() {
               </svg>
             </div>
           </Typography>
-          <div>
+          <div> 
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -139,6 +170,7 @@ export default function MenuAppBar() {
                   fill="#633CFF"
                 />
               </svg>
+              {userData && (<p className="navbar-menu-list navbar-logout navbar-username">{userData.username}</p>)}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="10"

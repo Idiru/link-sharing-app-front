@@ -2,10 +2,12 @@ import "../src/styles/pages/SignupPage.css";
 import "../src/styles/pages/SignupValidationPage.css";
 import Confetti from "react-confetti";
 import { useWindowSize } from "react-use";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function SignupValidationPage() {
   const { width, height } = useWindowSize();
+  const navigate = useNavigate();
+
 
   return (
     <div className="signup-container validation-page">
@@ -79,8 +81,8 @@ function SignupValidationPage() {
           Please log in now to access your new account and start enjoying all
           the features we have to offer.
         </p>
-        <button className="signup-primary-button primary-button">
-          <Link to="/login">Login</Link>
+        <button className="signup-primary-button primary-button"  onClick={()=> navigate("/login")}>
+          Login
         </button>
       </div>
     </div>
