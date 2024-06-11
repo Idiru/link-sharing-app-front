@@ -54,10 +54,10 @@ export default function MenuAppBar() {
 
   return (
     <Box
+      className="navbar-test"
       sx={{
         flexGrow: 1,
         ".css-hip9hq-MuiPaper-root-MuiAppBar-root": {
-          backgroundColor: "#FFF",
           borderRadius: "12px",
           boxShadow: "none",
         },
