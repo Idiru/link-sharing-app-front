@@ -1,5 +1,5 @@
-import "../src/styles/pages/SignupPage.css";
-import "../src/styles/pages/SignupValidationPage.css";
+import "../styles/pages/SignupPage.css";
+import "../styles/pages/SignupValidationPage.css";
 import Confetti from "react-confetti";
 import { useWindowSize } from "react-use";
 import { useNavigate } from "react-router-dom";

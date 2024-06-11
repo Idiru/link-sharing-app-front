@@ -1,9 +1,9 @@
 import { useState, useContext } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import { AuthContext } from "../src/context/auth.context";
+import { AuthContext } from "../context/auth.context";
 import Snackbar from "@mui/material/Snackbar";
-import '../src/styles/pages/SignupPage.css'
+import '../styles/pages/SignupPage.css'
 const API_URL = "http://localhost:5005";
 
 function LoginPage() {

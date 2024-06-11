@@ -1,9 +1,9 @@
-import '../src/styles/pages/UpdateUserPage.css'
+import '../styles/pages/UpdateUserPage.css'
 import { useNavigate } from 'react-router-dom'
 import { useReducer } from 'react'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
-import Navbar from '../src/components/Navbar'
+import Navbar from '../components/Navbar'
 function UpdateUserPage() {
     const navigate = useNavigate()
     const { id } = useParams();

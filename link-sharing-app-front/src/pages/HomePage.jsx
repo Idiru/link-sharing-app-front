@@ -1,5 +1,5 @@
-import Navbar from "../src/components/Navbar"
-import "../src/styles/pages/Homepage.css"
+import Navbar from "../components/Navbar"
+import "../styles/pages/Homepage.css"
 
 function HomePage() {
     return (

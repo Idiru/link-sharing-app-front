@@ -1,4 +1,4 @@
-import "../src/styles/pages/SignupPage.css";
+import "../styles/pages/SignupPage.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
