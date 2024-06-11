@@ -34,7 +34,7 @@ export default function MenuAppBar() {
   useEffect(() => {
     const token = localStorage.getItem('authToken'); // Récupération du token du localStorage
     if (token) {
-      axios.get(`${API_URL}/user/username`, {
+      axios.get(`${API_URL}/users/username`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }

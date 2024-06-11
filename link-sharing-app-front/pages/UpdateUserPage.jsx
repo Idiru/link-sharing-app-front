@@ -5,15 +5,17 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
 import Navbar from '../src/components/Navbar'
 function UpdateUserPage() {
+    const API_URL = "http://localhost:5005";
+
     const navigate = useNavigate()
     const { id } = useParams();
     console.log(id)  // id is being printed indeed
     const fetchUserData = async () => {
         try {
-            const response = await fetch(`/auth/users/${id}`, {
+            console.log(`${API_URL}/users/${id}`)
+            const response = await fetch(`${API_URL}/auth/users/${id}`, {
                 method: 'GET',
                 headers: {
-                    'Content-Type': 'application/json',
                     'Authorization': `Bearer ${localStorage.getItem('authToken')}`
 
 
@@ -23,6 +25,7 @@ function UpdateUserPage() {
 
             if (response.ok) {
                 const result = await response.json();
+
                 const { email, firstName, lastName, userName } = result.user;
                 return { email, firstName, lastName, userName, currentPassword: '', newPassword: '', repeatedPassword: '' };
             } else {
@@ -55,6 +58,7 @@ function UpdateUserPage() {
     const [loading, setLoading] = useState(true);
     useEffect(() => {
         const initializeUserData = async () => {
+            console.log("x")
             const userData = await fetchUserData();
             dispatch({ type: 'setUserData', payload: userData });
             setLoading(false);
