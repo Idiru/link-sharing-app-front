@@ -3,7 +3,7 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../src/context/auth.context";
 import Snackbar from "@mui/material/Snackbar";
-
+import '../src/styles/pages/SignupPage.css'
 const API_URL = "http://localhost:5005";
 
 function LoginPage() {
@@ -44,9 +44,6 @@ function LoginPage() {
       });
   };
 
-  const handleClick = () => {
-    setOpen(true);
-  };
 
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
@@ -141,6 +138,7 @@ function LoginPage() {
               placeholder="e.g. alex@email.com"
             />
           </div>
+
           <label className="signup-label"> Password </label>
           <div className="input-container">
             <svg

@@ -4,7 +4,9 @@ import "../src/styles/pages/Homepage.css"
 function HomePage() {
     return (
         <div className="homepage-container">
-        <Navbar/>
+       
+        <Navbar/> 
+        you are logged in
         </div>
     )
 }
