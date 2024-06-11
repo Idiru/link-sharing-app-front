@@ -62,7 +62,7 @@ export default function MenuAppBar() {
           boxShadow: "none",
         },
         "@media screen and (min-width: 768px)": {
-          margin: "24px",
+          padding: "24px",
         },
       }}
     >
