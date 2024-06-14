@@ -15,9 +15,6 @@ export default function MenuAppBar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [userData, setuserData] = useState(null);
 
-
-  const API_URL = "http://localhost:5005";
-
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -34,13 +31,12 @@ export default function MenuAppBar() {
   useEffect(() => {
     const token = localStorage.getItem('authToken'); // Récupération du token du localStorage
     if (token) {
-      axios.get(`${API_URL}/user/username`, {
+      axios.get(`${import.meta.env.VITE_BASE_URL}/user/username`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       })
       .then(res => {
-        console.log('User Data:', res.data);
         setuserData(res.data)
       })
       .catch(error => {

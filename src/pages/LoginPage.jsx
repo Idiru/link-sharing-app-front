@@ -4,7 +4,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/auth.context";
 import Snackbar from "@mui/material/Snackbar";
 import '../styles/pages/SignupPage.css'
-const API_URL = "http://localhost:5005";
 
 function LoginPage() {
   const [email, setEmail] = useState("");
@@ -25,7 +24,7 @@ function LoginPage() {
     const requestBody = { email, password };
 
     axios
-      .post(`${API_URL}/auth/login`, requestBody)
+      .post(`${import.meta.env.VITE_BASE_URL}/auth/login`, requestBody)
       .then((response) => {
         console.log("JWT token", response.data.authToken);
 

@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 
-const API_URL = "http://localhost:5005";
 
 function SignupPage() {
   const [email, setEmail] = useState("");
@@ -25,7 +24,7 @@ function SignupPage() {
     const reqBody = { userName, email, password, repeatedPassword };
 
     axios
-      .post(`${API_URL}/auth/signup`, reqBody)
+      .post(`${import.meta.env.VITE_BASE_URL}/auth/signup`, reqBody)
       .then((res) => {
         navigate("/signup-validation");
       })
