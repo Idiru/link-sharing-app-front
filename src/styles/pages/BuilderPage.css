@@ -1,0 +1,45 @@
+.builderpage-container {
+    background-color: #FAFAFA;
+    height: 100vh;
+}
+
+.builderpage-content-container {
+    background-color: #FFF;
+    margin: 16px;
+    padding: 24px;
+    height: 700px;
+    border-radius: 12px;
+
+}
+
+.builderpage-content-header-container h2 {
+font-size: 24px;
+}
+
+.builderpage-content-container p {
+    color: #737373;
+}
+
+.builderpage-add-content-button {
+    margin-top: 40px;
+    margin-bottom: 24px;
+    width: 100%;
+
+}
+
+.builderpage-content-block-container {
+    height: 188px;
+    background: #FAFAFA;
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+}
+
+.builderpage-content-block-header {
+    display: flex;
+    justify-content: space-between;
+
+}

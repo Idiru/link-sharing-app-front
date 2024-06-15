@@ -6,6 +6,7 @@ import LoginPage from './pages/LoginPage'
 import SignupPage from './pages/SignupPage'
 import SignupValidationPage from './pages/SignupValidationPage'
 import UpdateUserPage from './pages/UpdateUserPage'
+import BuilderPage from './pages/BuilderPage'
 import LinksPage from './pages/LinksPage'
 import Anonymous from './components/Anonymous'
 import Private from './components/Private'
@@ -15,12 +16,13 @@ function App() {
     <>
 
       <Routes>
-        <Route path='/' element={<HomePage />} />
+        <Route path='/' element={<HomePage />}/>
         <Route path='/login' element={<LoginPage />} />
         <Route path='/signup' element={<SignupPage />} />
         <Route path='/signup-validation' element={<SignupValidationPage />} />
         <Route path='/update/:id' element={<Private><UpdateUserPage /></Private>} />
-        <Route path='/links' element={<LinksPage />} />
+        <Route path='/content' element={<Private><BuilderPage /></Private>} />
+        <Route path='/links' element={<LinksPage />}/>
       </Routes>
 
 

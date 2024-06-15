@@ -6,7 +6,6 @@ function HomePage() {
         <div className="homepage-container">
        
         <Navbar/> 
-        you are logged in
         </div>
     )
 }
