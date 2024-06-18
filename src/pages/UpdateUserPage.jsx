@@ -1,30 +1,28 @@
-import '../styles/pages/UpdateUserPage.css'
-import { useNavigate } from 'react-router-dom'
-import { useReducer } from 'react'
-import { useEffect, useState } from 'react'
+import '../styles/pages/UpdateUserPage.css';
+import { useNavigate } from 'react-router-dom';
+import { useReducer, useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
-import Navbar from '../components/Navbar'
+import Navbar from '../components/Navbar';
+
 function UpdateUserPage() {
-    const navigate = useNavigate()
+    const API_URL = "http://localhost:5005";
+
+    const navigate = useNavigate();
     const { id } = useParams();
-    console.log(id)  // id is being printed indeed
+
     const fetchUserData = async () => {
         try {
-            const response = await fetch(`/auth/users/${id}`, {
+            const response = await fetch(`${API_URL}/auth/users/${id}`, {
                 method: 'GET',
                 headers: {
-                    'Content-Type': 'application/json',
                     'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-
-
                 }
-
             });
 
             if (response.ok) {
                 const result = await response.json();
                 const { email, firstName, lastName, userName } = result.user;
-                return { email, firstName, lastName, userName, currentPassword: '', newPassword: '', repeatedPassword: '' };
+                return { email, firstName, lastName, userName, currentPassword: '', newPassword: '', repeatedPassword: '', profileImage: result.user.profileImage };
             } else {
                 console.error('Failed to fetch user data');
                 return initState;
@@ -34,6 +32,7 @@ function UpdateUserPage() {
             return initState;
         }
     };
+
     const initState = {
         userName: '',
         firstName: '',
@@ -41,42 +40,109 @@ function UpdateUserPage() {
         email: '',
         currentPassword: '',
         newPassword: '',
-        repeatedPassword: ''
-    }
-    const reducer = (state, action) => {
-        if (action.type == 'input') {
-            return { ...state, [action.field]: [action.value] }
-        }
-        else if (action.type == 'setUserData')
-            return { ...state, ...action.payload };
+        repeatedPassword: '',
+        profileImage: null
+    };
 
-    }
-    const [state, dispatch] = useReducer(reducer, initState)
+    const reducer = (state, action) => {
+        if (action.type === 'input') {
+            return { ...state, [action.field]: action.value };
+        } else if (action.type === 'setUserData') {
+            return { ...state, ...action.payload };
+        }
+    };
+
+    const [state, dispatch] = useReducer(reducer, initState);
     const [loading, setLoading] = useState(true);
+    const [file, setFile] = useState(null);
+    const [filename, setFilename] = useState('Choose File');
+    const [profileImageUrl, setProfileImageUrl] = useState(null);
+    const fileInputRef = useRef(null);
+
     useEffect(() => {
         const initializeUserData = async () => {
             const userData = await fetchUserData();
             dispatch({ type: 'setUserData', payload: userData });
+            setProfileImageUrl(userData.profileImage); // Set profile image URL if it exists
             setLoading(false);
         };
         initializeUserData();
     }, []);
 
     const handleChange = (e) => {
-        e.preventDefault()
         dispatch({
             type: 'input',
             field: e.target.name,
             value: e.target.value
-        })
-    }
-    const saveData = (e) => {
-        e.preventDefault()
-    }
+        });
+    };
+
+    const handleFileChange = (e) => {
+        setFile(e.target.files[0]);
+        setFilename(e.target.files[0].name);
+
+        // Read selected file and set profile image URL for preview
+        const reader = new FileReader();
+        reader.onload = () => {
+            setProfileImageUrl(reader.result);
+        };
+        reader.readAsDataURL(e.target.files[0]);
+    };
+
+    const handleClickUpload = () => {
+        fileInputRef.current.click();
+    };
+
+    const saveData = async (e) => {
+        e.preventDefault();
+        const { email, firstName, lastName, userName, currentPassword, newPassword, repeatedPassword } = state;
+
+        if (newPassword !== repeatedPassword) {
+            alert("New passwords do not match.");
+            return;
+        }
+
+        const data = new FormData();
+        data.append('profileImage', file);
+        data.append('email', email);
+        data.append('firstName', firstName);
+        data.append('lastName', lastName);
+        data.append('userName', userName);
+        data.append('currentPassword', currentPassword);
+        data.append('newPassword', newPassword);
+
+        try {
+            const response = await fetch(`${API_URL}/auth/update/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+                },
+                body: data
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                console.log("User updated successfully:", result);
+                if (result.user.profileImage) {
+                    setProfileImageUrl(result.user.profileImage);
+                }
+                navigate('/link');
+            } else {
+                const errorData = await response.json();
+                console.error("Failed to update user:", errorData.message);
+                alert("Failed to update user: " + errorData.message);
+            }
+        } catch (error) {
+            console.error("Error updating user:", error);
+            alert("Error updating user");
+        }
+    };
+
     const cancelChanges = (e) => {
-        e.preventDefault()
-        navigate('/links') // for the moment
-    }
+        e.preventDefault();
+        navigate('/links'); // for the moment
+    };
+
     return (
         <>
             <Navbar />
@@ -85,13 +151,18 @@ function UpdateUserPage() {
                 <div className="pic-container">
                     <p className="profile-pic-text">Profile picture</p>
                     <div className="pic-container-right">
-                        <section>
+                        <section onClick={handleClickUpload}>
                             <div>
-                                <img src="../src/assets/Images/ph_image.svg" />
+                                {profileImageUrl ? (
+                                    <img src={profileImageUrl} alt="Profile" />
+                                ) : (
+                                    <img src="../src/assets/Images/ph_image.svg" alt="Placeholder" />
+                                )}
                             </div>
-                            <h5>upload image</h5>
+                            <h5>Upload image</h5>
                         </section>
-                        <p>Image must be below 1024x1024px. Use PNG or JPG format.</p>
+                        <input type="file" ref={fileInputRef} style={{ display: 'none' }} onChange={handleFileChange} />
+                        <label><p>Image must be below 1024x1024px. Use PNG or JPG format.</p></label>
                     </div>
                 </div>
                 <div className="general-data-container">
@@ -145,7 +216,7 @@ function UpdateUserPage() {
                     <div className="input-container">
                         <label>New Password</label>
                         <input
-                            name=" newPassword"
+                            name="newPassword"
                             type="password"
                             value={state.newPassword}
                             onChange={handleChange}
