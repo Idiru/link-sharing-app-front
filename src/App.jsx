@@ -9,6 +9,7 @@ import UpdateUserPage from './pages/UpdateUserPage'
 import LinksPage from './pages/LinksPage'
 import Anonymous from './components/Anonymous'
 import Private from './components/Private'
+import PreviewPage from './pages/PreviewPage'
 function App() {
 
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path='/signup-validation' element={<SignupValidationPage />} />
         <Route path='/update/:id' element={<Private><UpdateUserPage /></Private>} />
         <Route path='/links' element={<LinksPage />} />
+        <Route path='/:id/preview' element={<PreviewPage />} />
       </Routes>
 
 

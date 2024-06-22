@@ -51,6 +51,11 @@ body {
   gap: 24px;
   flex: 1 0 0;
 }
+.pic-container-right img {
+  height: 100px;
+  width: 100px;
+  border-radius: 10px;
+}
 .pic-container-right p {
   color: var(--Grey, #737373);
   font-family: "Instrument Sans";
