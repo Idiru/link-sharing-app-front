@@ -27,7 +27,7 @@ function BuilderPage() {
   const handleDropdownChange = (e, index) => {
     const newContent = content.map((item, idx) => {
       if (idx === index) {
-        return { ...item, platform: e.target.value };
+        return { ...item, platform: e.target.value, state: "updated" };
       }
       return item;
     });
@@ -48,7 +48,7 @@ function BuilderPage() {
   const handleLinkChange = (e, index) => {
     const newContent = content.map((item, idx) => {
       if (idx === index) {
-        return { ...item, url: e.target.value };
+        return { ...item, url: e.target.value, state: "updated" };
       }
       return item;
     });
@@ -58,7 +58,7 @@ function BuilderPage() {
   const handleLinkTitle = (e, index) => {
     const newContent = content.map((item, idx) => {
       if (idx === index) {
-        return { ...item, title: e.target.value };
+        return { ...item, title: e.target.value, state: "updated" };
       }
       return item;
     });
@@ -68,9 +68,9 @@ function BuilderPage() {
   const handleSave = async () => {
     // Managing content creation, update and delete
     const toCreate = content.filter((item) => item.state === "new");
-    const toUpdate = content.filter((item) => item.state === "modified");
+    const toUpdate = content.filter((item) => item.state === "updated");
     const toDelete = content.filter((item) => item.state == "deleted");
-    console.log("to delet:", toDelete)
+    console.log("to update:", toUpdate)
 
     // Use Promise.all to handle all requests simultaneously
     try {
@@ -87,27 +87,27 @@ function BuilderPage() {
                 },
               }
             ),
-            (item.state = "created"),
+            (item.state = "created", item.isPublished = true),
             console.log(item)
           );
         }),
         ...toUpdate.map((item) =>
           axios.put(
-            `${import.meta.env.VITE_BASE_URL}/content/${item.id}`,
+            `${import.meta.env.VITE_BASE_URL}/content/${item._id}`,
             item,
             {
               headers: {
                 Authorization: `Bearer ${localStorage.getItem("authToken")}`,
               },
-            }
-          )
+            },
+          ),
         ),
         ...toDelete.map((item) =>
           axios.delete(`${import.meta.env.VITE_BASE_URL}/content/${item._id}`, {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("authToken")}`,
             },
-          })
+          }),
         ),
       ]);
 
@@ -179,7 +179,8 @@ function BuilderPage() {
           </button>
         </div>
         <div className="builderpage-content-builder-container">
-          {content.map((item, index) => (
+         { !content ? <div>Loading</div> : 
+            content.map((item, index) => (
             item.state !== "deleted" ? <div className="builderpage-content-block-container" key={index}>
               <div className="builderpage-content-block-header">
                 <p className="builderpage-content-block-label">
@@ -273,7 +274,8 @@ function BuilderPage() {
               </div>
             </div> 
             : ""
-          ))}
+          ))
+         }
         </div>
         <div className="builderpage-action-container">
           <button className="secondary-button">Preview</button>
@@ -282,6 +284,7 @@ function BuilderPage() {
           </button>
         </div>
       </div>
+    
     </div>
   );
 }

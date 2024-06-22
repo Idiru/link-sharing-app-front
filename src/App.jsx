@@ -16,12 +16,12 @@ function App() {
     <>
 
       <Routes>
-        <Route path='/' element={<HomePage />}/>
+        {/* <Route path='/' element={<HomePage />}/> */}
         <Route path='/login' element={<LoginPage />} />
         <Route path='/signup' element={<SignupPage />} />
         <Route path='/signup-validation' element={<SignupValidationPage />} />
         <Route path='/update/:id' element={<Private><UpdateUserPage /></Private>} />
-        <Route path='/content' element={<Private><BuilderPage /></Private>} />
+        <Route path='/' element={<Private><BuilderPage /></Private>} />
         <Route path='/links' element={<LinksPage />}/>
       </Routes>
     </>
