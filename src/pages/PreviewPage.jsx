@@ -35,6 +35,7 @@ function PreviewPage() {
             if (response.ok) {
                 const result = await response.json();
                 const { email, firstName, lastName, userName, profileImage } = result.user;
+                console.log(result)
                 setUserData({ email, firstName, lastName, userName, profileImage });
             } else {
                 console.error('Failed to fetch user data');
@@ -72,6 +73,27 @@ function PreviewPage() {
     const handleRedirection = (url) => {
         window.location.href = url;
     };
+    const handleShareLink = async () => {
+        try {
+            const response = await fetch(`${API_URL}/content/users/${id}/publish`, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                console.log('Content published ');
+                // fetch again  to update the UI
+                fetchUserContent();
+            } else {
+                console.error('Failed to publish content');
+            }
+        } catch (error) {
+            console.error('Error publishing content:', error);
+        }
+    };
 
     return (
         <div style={{ background: 'var(--Light-Grey, #FAFAFA)' }}>
@@ -80,7 +102,7 @@ function PreviewPage() {
                     <button className='back-btn' onClick={() => navigate(`/users/${id}`)}>
                         <p>Back To Editor</p>
                     </button>
-                    <button className='share-btn'>
+                    <button className='share-btn' onClick={handleShareLink}>
                         <p>Share Link</p>
                     </button>
                 </div>
