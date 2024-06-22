@@ -24,8 +24,6 @@ function App() {
         <Route path='/content' element={<Private><BuilderPage /></Private>} />
         <Route path='/links' element={<LinksPage />}/>
       </Routes>
-
-
     </>
   )
 }

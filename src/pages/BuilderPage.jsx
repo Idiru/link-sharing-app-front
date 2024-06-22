@@ -1,13 +1,165 @@
 import Navbar from "../components/Navbar";
 import "../styles/pages/BuilderPage.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { jwtDecode } from "jwt-decode";
+import { v4 as uuidv4 } from "uuid";
 
 function BuilderPage() {
   const [selectedPlatform, setSelectedPlatform] = useState("github");
+  const [content, setContent] = useState([]);
+  const token = localStorage.getItem("authToken");
 
-  const handleDropdownChange = (e) => {
-    setSelectedPlatform(e.target.value);
+  const handleAddNewLink = () => {
+    const newId = uuidv4();
+
+    const newBlock = {
+      block: "link",
+      platform: "github",
+      url: "",
+      state: "new",
+      uuid: newId,
+    };
+    setContent((prev) => [...prev, newBlock]);
+    console.log(content);
   };
+
+  const handleDropdownChange = (e, index) => {
+    const newContent = content.map((item, idx) => {
+      if (idx === index) {
+        return { ...item, platform: e.target.value };
+      }
+      return item;
+    });
+    setContent(newContent);
+  };
+
+  const handleRemoveLink = (_id) => {
+    // Create a new array where the item with the matching _id is marked as "deleted"
+    const newContent = content.map(item => 
+      item._id === _id ? { ...item, state: "deleted" } : item
+    );
+  
+    // Update the state with the new array
+    setContent(newContent);
+    console.log("Deleted state added for _id:", _id, content);
+  };
+
+  const handleLinkChange = (e, index) => {
+    const newContent = content.map((item, idx) => {
+      if (idx === index) {
+        return { ...item, url: e.target.value };
+      }
+      return item;
+    });
+    setContent(newContent);
+  };
+
+  const handleLinkTitle = (e, index) => {
+    const newContent = content.map((item, idx) => {
+      if (idx === index) {
+        return { ...item, title: e.target.value };
+      }
+      return item;
+    });
+    setContent(newContent);
+  };
+
+  const handleSave = async () => {
+    // Managing content creation, update and delete
+    const toCreate = content.filter((item) => item.state === "new");
+    const toUpdate = content.filter((item) => item.state === "modified");
+    const toDelete = content.filter((item) => item.state == "deleted");
+    console.log("to delet:", toDelete)
+
+    // Use Promise.all to handle all requests simultaneously
+    try {
+      await Promise.all([
+        ...toCreate.map((item) => {
+          console.log("Saving item:", item);
+          return (
+            axios.post(
+              `${import.meta.env.VITE_BASE_URL}/content/create`,
+              item,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            ),
+            (item.state = "created"),
+            console.log(item)
+          );
+        }),
+        ...toUpdate.map((item) =>
+          axios.put(
+            `${import.meta.env.VITE_BASE_URL}/content/${item.id}`,
+            item,
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+              },
+            }
+          )
+        ),
+        ...toDelete.map((item) =>
+          axios.delete(`${import.meta.env.VITE_BASE_URL}/content/${item._id}`, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            },
+          })
+        ),
+      ]);
+
+      //Remove deleted items from the state
+      setContent((prev) =>
+        prev
+          .filter((item) => item.state !== "deleted")
+          .map((item) => ({ ...item, state: undefined }))
+      );
+
+      console.log("All changes saved successfully.");
+    } catch (error) {
+      console.error("Error saving changes:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token);
+        const userId = decodedToken._id;
+        console.log("token:", token);
+        console.log("userId:", userId);
+        axios
+          .get(`${import.meta.env.VITE_BASE_URL}/auth/users/${userId}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Cache-Control": "no-cache",
+            },
+          })
+          .then((res) => {
+            console.log(res.data.user.content);
+            if (res.data.user.content) {
+              setContent(res.data.user.content);
+            } else {
+              console.error("No content found in response");
+              setContent([]);
+            }
+          })
+          .catch((error) => {
+            const errorDescription = error.response
+              ? error.response.data.message
+              : "Network Error";
+            console.error("Error fetching user:", errorDescription);
+          });
+      } catch (error) {
+        console.error("Error decoding token:", error);
+      }
+    } else {
+      console.error("No token found");
+    }
+  }, []);
 
   return (
     <div className="builderpage-container">
@@ -16,79 +168,118 @@ function BuilderPage() {
         <div className="builderpage-content-header-container">
           <h2>Customize your content</h2>
           <p>
-            Add/edit/remove contnet below and then share all of them with the
+            Add/edit/remove content below and then share all of them with the
             world!
           </p>
-          <button className="builderpage-add-content-button secondary-button">
+          <button
+            className="builderpage-add-content-button secondary-button"
+            onClick={handleAddNewLink}
+          >
             + Add new link
           </button>
         </div>
         <div className="builderpage-content-builder-container">
-          <div className="builderpage-content-block-container">
-            <div className="builderpage-content-block-header">
-              <p className="builderpage-content-block-label">
-                <b>Link #1</b>
-              </p>
-              <p className="builderpage-content-block-remove">Remove</p>
-            </div>
-            <div className="builderpage-content-block-content">
-              <div className="select-container">
-                <label>Platform</label>
-                <div className="builderpage-content-block-image-container">
-                  {selectedPlatform ? (
-                    <img
-                      src={`./src/assets/svg/${selectedPlatform}-grey-logo.svg`}
-                      alt="logo-plateform"
-                    />
-                  ) : (
-                    ""
-                  )}
-                </div>
-                <select
-                  className="builderpage-select"
-                  onChange={handleDropdownChange}
-                  name="platform"
+          {content.map((item, index) => (
+            item.state !== "deleted" ? <div className="builderpage-content-block-container" key={index}>
+              <div className="builderpage-content-block-header">
+                <p className="builderpage-content-block-label">
+                  <b>Link #{index + 1}</b>
+                </p>
+                <p
+                  className="builderpage-content-block-remove"
+                  onClick={() => handleRemoveLink(item._id)}
                 >
-                  <option value="github">Github</option>
-                  <option value="youtube">Youtube</option>
-                  <option value="linkedin">Linkedin</option>
-                  <option value="facebook">Facebook</option>
-                  <option value="twitch">Twitch</option>
-                </select>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="14"
-                  height="9"
-                  viewBox="0 0 14 9"
-                  fill="none"
-                  className="builderpage-content-block-arrow"
-                >
-                  <path d="M1 1L7 7L13 1" stroke="#633CFF" strokeWidth="2" />
-                </svg>
+                  Remove
+                </p>
               </div>
-            </div>
-            <div className="builderpage-input-container input-container">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                viewBox="0 0 16 16"
-                fill="none"
-                className="builderpage-link-svg"
-              >
-                <path
-                  d="M8.523 11.7204C8.59292 11.7901 8.6484 11.8729 8.68625 11.964C8.7241 12.0552 8.74359 12.1529 8.74359 12.2517C8.74359 12.3504 8.7241 12.4481 8.68625 12.5393C8.6484 12.6304 8.59292 12.7132 8.523 12.7829L8.15175 13.1542C7.44826 13.8576 6.49413 14.2529 5.49925 14.2529C4.50437 14.2529 3.55024 13.8576 2.84675 13.1542C2.14326 12.4507 1.74805 11.4965 1.74805 10.5017C1.74805 9.50678 2.14326 8.55264 2.84675 7.84916L4.35425 6.34228C5.03018 5.66468 5.93961 5.27117 6.89626 5.24236C7.85292 5.21354 8.78439 5.5516 9.49987 6.18728C9.57374 6.25294 9.63395 6.33251 9.67707 6.42144C9.72019 6.51037 9.74537 6.60693 9.75117 6.70559C9.75698 6.80425 9.74329 6.90309 9.7109 6.99646C9.6785 7.08984 9.62803 7.17591 9.56237 7.24978C9.49671 7.32365 9.41714 7.38386 9.32821 7.42698C9.23928 7.4701 9.14273 7.49528 9.04407 7.50108C8.94541 7.50689 8.84657 7.4932 8.75319 7.46081C8.65982 7.42841 8.57374 7.37794 8.49987 7.31228C8.07082 6.93124 7.5124 6.72852 6.93882 6.7456C6.36524 6.76268 5.81987 6.99826 5.41425 7.40416L3.908 8.90916C3.48597 9.33118 3.24888 9.90357 3.24888 10.5004C3.24888 11.0972 3.48597 11.6696 3.908 12.0917C4.33002 12.5137 4.90241 12.7508 5.49925 12.7508C6.09608 12.7508 6.66847 12.5137 7.0905 12.0917L7.46175 11.7204C7.5314 11.6507 7.61412 11.5954 7.70517 11.5576C7.79622 11.5199 7.89381 11.5004 7.99237 11.5004C8.09094 11.5004 8.18853 11.5199 8.27958 11.5576C8.37063 11.5954 8.45334 11.6507 8.523 11.7204ZM13.153 2.84541C12.4489 2.143 11.495 1.74854 10.5005 1.74854C9.50598 1.74854 8.55206 2.143 7.848 2.84541L7.47675 3.21666C7.33585 3.35755 7.2567 3.54865 7.2567 3.74791C7.2567 3.94717 7.33585 4.13826 7.47675 4.27916C7.61764 4.42005 7.80874 4.49921 8.008 4.49921C8.20726 4.49921 8.39835 4.42005 8.53925 4.27916L8.9105 3.90791C9.33252 3.48588 9.90491 3.24879 10.5017 3.24879C11.0986 3.24879 11.671 3.48588 12.093 3.90791C12.515 4.32993 12.7521 4.90232 12.7521 5.49916C12.7521 6.09599 12.515 6.66838 12.093 7.09041L10.5861 8.59791C10.1801 9.00364 9.63447 9.23888 9.06075 9.25549C8.48703 9.27211 7.92865 9.06884 7.49987 8.68728C7.426 8.62162 7.33993 8.57115 7.24655 8.53876C7.15318 8.50636 7.05434 8.49268 6.95568 8.49848C6.85702 8.50429 6.76046 8.52947 6.67153 8.57258C6.5826 8.6157 6.50303 8.67591 6.43737 8.74978C6.37171 8.82365 6.32124 8.90973 6.28885 9.0031C6.25646 9.09648 6.24277 9.19531 6.24857 9.29398C6.25438 9.39264 6.27956 9.48919 6.32267 9.57812C6.36579 9.66705 6.426 9.74662 6.49987 9.81228C7.21486 10.4478 8.14571 10.7861 9.10191 10.7579C10.0581 10.7296 10.9674 10.337 11.6436 9.66041L13.1511 8.15353C13.8543 7.44964 14.2495 6.49546 14.2499 5.50048C14.2502 4.5055 13.8557 3.55104 13.153 2.84666V2.84541Z"
-                  fill="#737373"
-                />
-              </svg>
-              <input
-                type="url"
-                placeholder="https://github.com/Idiru"
-                name="url"
-                className="signup-input"
-              />
-            </div>
-          </div>
+              <div className="builderpage-content-block-content">
+                <div className="builderpage-content-select-container">
+                  <label>Platform</label>
+                  <div className="builderpage-content-select-container-image">
+                    {item.platform ? (
+                      <img
+                        src={`./src/assets/svg/${item.platform}-grey-logo.svg`}
+                        alt="logo-platform"
+                        className="builderpage-content-select-container-logo"
+                      />
+                    ) : (
+                      ""
+                    )}
+                    <select
+                      className="builderpage-select"
+                      onChange={(e) => handleDropdownChange(e, index)}
+                      name="platform"
+                      value={item.platform}
+                    >
+                      <option value="github">Github</option>
+                      <option value="youtube">Youtube</option>
+                      <option value="linkedin">Linkedin</option>
+                      <option value="facebook">Facebook</option>
+                      <option value="twitch">Twitch</option>
+                    </select>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="14"
+                      height="9"
+                      viewBox="0 0 14 9"
+                      fill="none"
+                      className="builderpage-content-block-arrow"
+                    >
+                      <path
+                        d="M1 1L7 7L13 1"
+                        stroke="#633CFF"
+                        strokeWidth="2"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              <div className="builderpage-input-container">
+                <div className="builderpage-input-container-content">
+                  <label>Title*</label>
+                  <div className="builderpage-input-container-image">
+                    <input
+                      type="url"
+                      placeholder="https://github.com/Idiru"
+                      name="url"
+                      className="builderpage-input input-title"
+                      value={item.title}
+                      onChange={(e) => handleLinkTitle(e, index)}
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="builderpage-input-container">
+                <div className="builderpage-input-container-content">
+                  <label>Link*</label>
+                  <div className="builderpage-input-container-image">
+                    <img
+                      className="builderpage-link-svg"
+                      src="./src/assets/svg/link-grey-logo.svg"
+                      alt="link-icon"
+                    />
+                    <input
+                      type="url"
+                      placeholder="https://github.com/Idiru"
+                      name="url"
+                      className="builderpage-input"
+                      value={item.url}
+                      onChange={(e) => handleLinkChange(e, index)}
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
+            </div> 
+            : ""
+          ))}
+        </div>
+        <div className="builderpage-action-container">
+          <button className="secondary-button">Preview</button>
+          <button className="primary-button" onClick={handleSave}>
+            Save
+          </button>
         </div>
       </div>
     </div>
