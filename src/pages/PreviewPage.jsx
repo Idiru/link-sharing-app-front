@@ -1,10 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
 import '../styles/pages/PreviewPage.css';
 import 'remixicon/fonts/remixicon.css';
+import Modal from 'react-modal';
+
+Modal.setAppElement('#root');
 
 function PreviewPage() {
     const API_URL = "http://localhost:5005";
+
+    const inputRef = useRef(null); // ref for the input field
 
     const navigateToUrl = useNavigate()
     // important social media 
@@ -23,6 +28,8 @@ function PreviewPage() {
 
     const [userData, setUserData] = useState(null);
     const [userContent, setUserContent] = useState([]);
+    const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [shareLink, setShareLink] = useState('');
     const fetchUserData = async () => {
         try {
             const response = await fetch(`${API_URL}/auth/users/${id}`, {
@@ -84,14 +91,22 @@ function PreviewPage() {
             });
 
             if (response.ok) {
-                console.log('Content published ');
-                // fetch again  to update the UI
-                fetchUserContent();
+                const result = await response.json();
+                console.log('Content published successfully');
+                setShareLink(`http://localhost:5173/devlinks/${userData.userName}`);
+                setModalIsOpen(true);
             } else {
                 console.error('Failed to publish content');
             }
         } catch (error) {
             console.error('Error publishing content:', error);
+        }
+    };
+    // COPYING THE LICK FROM INPUT FIELD HANDLER 
+    const copyToClipboard = () => {
+        if (inputRef.current) {
+            inputRef.current.select();
+            document.execCommand('copy');
         }
     };
 
@@ -132,6 +147,20 @@ function PreviewPage() {
                     </div>
                 </div>
             </div>
+            <Modal
+                isOpen={modalIsOpen}
+                onRequestClose={() => setModalIsOpen(false)}
+                contentLabel="Share Link Modal"
+                className="modal"
+                overlayClassName="modal-overlay"
+            >
+                <h2>Share Your Link</h2>
+                <div className='copy-input'>
+
+                    <input type="text" value={shareLink} ref={inputRef} readOnly />
+                    <span onClick={copyToClipboard} ><i className="ri-links-line"></i></span>
+                </div>
+            </Modal>
         </div>
     );
 }
