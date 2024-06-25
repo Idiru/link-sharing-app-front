@@ -8,7 +8,9 @@ import UpdateUserPage from './pages/UpdateUserPage'
 import BuilderPage from './pages/BuilderPage'
 import VisitorsPage from './pages/VisitorsPage'
 import Private from './components/Private'
+import PreviewPage from './pages/PreviewPage'
 function App() {
+
 
   return (
     <>
