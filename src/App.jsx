@@ -7,7 +7,6 @@ import SignupPage from './pages/SignupPage'
 import SignupValidationPage from './pages/SignupValidationPage'
 import UpdateUserPage from './pages/UpdateUserPage'
 import BuilderPage from './pages/BuilderPage'
-import LinksPage from './pages/LinksPage'
 import VisitorsPage from './pages/VisitorsPage'
 
 function App() {
@@ -22,7 +21,7 @@ function App() {
         <Route path='/signup-validation' element={<SignupValidationPage />} />
         <Route path='/update/:id' element={<Private><UpdateUserPage /></Private>} />
         <Route path='/' element={<Private><BuilderPage /></Private>} />
-        <Route path='/links' element={<LinksPage />}/>
+        <Route path='/links' element={<VisitorsPage />} />
         <Route path='/:id/preview' element={<PreviewPage />} />
       </Routes>
     </>
