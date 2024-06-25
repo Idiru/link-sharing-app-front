@@ -42,7 +42,7 @@ function PreviewPage() {
             if (response.ok) {
                 const result = await response.json();
                 const { email, firstName, lastName, userName, profileImage } = result.user;
-                console.log(result)
+                console.log(result.user)
                 setUserData({ email, firstName, lastName, userName, profileImage });
             } else {
                 console.error('Failed to fetch user data');
@@ -93,7 +93,7 @@ function PreviewPage() {
             if (response.ok) {
                 const result = await response.json();
                 console.log('Content published successfully');
-                setShareLink(`http://localhost:5173/devlinks/${userData.userName}`);
+                setShareLink(`${API_URL}/devlinks/${userData.userName}`);
                 setModalIsOpen(true);
             } else {
                 console.error('Failed to publish content');
