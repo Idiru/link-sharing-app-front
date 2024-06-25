@@ -111,6 +111,29 @@ button {
   color: #fff;
 }
 
+.secondary-button {
+  border-radius: 8px;
+  background: #fff;
+  color: #633CFF;
+  font-family: "Instrument Sans";
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 150%;
+  padding: 11px 27px;
+  border: 1px solid #633CFF;
+}
+
+.secondary-button:hover {
+  background-color: #beadff;
+  box-shadow: 0px 0px 32px 0px rgba(99, 60, 255, 0.25);
+  border-color: #beadff;
+}
+
+
+.primary-button a:hover {
+  color: #fff;
+}
 @media (min-width: 768px) {
   body {
     background-color: #fafafa;

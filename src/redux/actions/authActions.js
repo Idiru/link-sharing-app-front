@@ -1,9 +1,8 @@
 import axios from 'axios';
-const API_URL = "http://localhost:5005";
 
 export const loginUser = (email, password) => async (dispatch) => {
   try {
-    const response = await axios.post(`${API_URL}/auth/login`, { email, password });
+    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/auth/login`, { email, password });
     const { authToken } = response.data;
     localStorage.setItem('authToken', authToken);
     dispatch({
@@ -30,7 +29,7 @@ export const authenticateUser = () => async (dispatch) => {
   const storedToken = localStorage.getItem('authToken');
   if (storedToken) {
     try {
-      const response = await axios.get(`${API_URL}/auth/verify`, {
+      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/auth/verify`, {
         headers: { Authorization: `Bearer ${storedToken}` },
       });
       const user = response.data;
