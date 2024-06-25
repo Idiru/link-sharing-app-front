@@ -36,10 +36,10 @@ function BuilderPage() {
 
   const handleRemoveLink = (_id) => {
     // Create a new array where the item with the matching _id is marked as "deleted"
-    const newContent = content.map(item => 
+    const newContent = content.map((item) =>
       item._id === _id ? { ...item, state: "deleted" } : item
     );
-  
+
     // Update the state with the new array
     setContent(newContent);
     console.log("Deleted state added for _id:", _id, content);
@@ -48,8 +48,10 @@ function BuilderPage() {
   const handleLinkChange = (e, index) => {
     const newContent = content.map((item, idx) => {
       if (idx === index) {
-        return { ...item, url: e.target.value, state: "updated" };
+        const newState = item.state !== "new" ? "updated" : "new";
+        return { ...item, url: e.target.value, state: newState};
       }
+      console.log("Content updated:",content)
       return item;
     });
     setContent(newContent);
@@ -58,7 +60,8 @@ function BuilderPage() {
   const handleLinkTitle = (e, index) => {
     const newContent = content.map((item, idx) => {
       if (idx === index) {
-        return { ...item, title: e.target.value, state: "updated" };
+        const newState = item.state !== "new" ? "updated" : "new";
+        return { ...item, title: e.target.value, state: newState };
       }
       return item;
     });
@@ -70,26 +73,22 @@ function BuilderPage() {
     const toCreate = content.filter((item) => item.state === "new");
     const toUpdate = content.filter((item) => item.state === "updated");
     const toDelete = content.filter((item) => item.state == "deleted");
-    console.log("to update:", toUpdate)
+    console.log("to update:", toUpdate);
 
     // Use Promise.all to handle all requests simultaneously
     try {
       await Promise.all([
         ...toCreate.map((item) => {
           console.log("Saving item:", item);
-          return (
-            axios.post(
-              `${import.meta.env.VITE_BASE_URL}/content/create`,
-              item,
-              {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
-              }
-            ),
-            (item.state = "created", item.isPublished = true),
-            console.log(item)
-          );
+          return axios
+            .post(`${import.meta.env.VITE_BASE_URL}/content/create`, item, {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            })
+            .then((response) => {
+              return { ...item, ...response.data, state: "created" };
+            });
         }),
         ...toUpdate.map((item) =>
           axios.put(
@@ -99,15 +98,15 @@ function BuilderPage() {
               headers: {
                 Authorization: `Bearer ${localStorage.getItem("authToken")}`,
               },
-            },
-          ),
+            }
+          )
         ),
         ...toDelete.map((item) =>
           axios.delete(`${import.meta.env.VITE_BASE_URL}/content/${item._id}`, {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("authToken")}`,
             },
-          }),
+          })
         ),
       ]);
 
@@ -179,103 +178,111 @@ function BuilderPage() {
           </button>
         </div>
         <div className="builderpage-content-builder-container">
-         { !content ? <div>Loading</div> : 
-            content.map((item, index) => (
-            item.state !== "deleted" ? <div className="builderpage-content-block-container" key={index}>
-              <div className="builderpage-content-block-header">
-                <p className="builderpage-content-block-label">
-                  <b>Link #{index + 1}</b>
-                </p>
-                <p
-                  className="builderpage-content-block-remove"
-                  onClick={() => handleRemoveLink(item._id)}
+          {!content ? (
+            <div>Loading</div>
+          ) : (
+            content.map((item, index) =>
+              item.state !== "deleted" ? (
+                <div
+                  className="builderpage-content-block-container"
+                  key={index}
                 >
-                  Remove
-                </p>
-              </div>
-              <div className="builderpage-content-block-content">
-                <div className="builderpage-content-select-container">
-                  <label>Platform</label>
-                  <div className="builderpage-content-select-container-image">
-                    {item.platform ? (
-                      <img
-                        src={`./src/assets/svg/${item.platform}-grey-logo.svg`}
-                        alt="logo-platform"
-                        className="builderpage-content-select-container-logo"
-                      />
-                    ) : (
-                      ""
-                    )}
-                    <select
-                      className="builderpage-select"
-                      onChange={(e) => handleDropdownChange(e, index)}
-                      name="platform"
-                      value={item.platform}
+                  <div className="builderpage-content-block-header">
+                    <p className="builderpage-content-block-label">
+                      <b>Link #{index + 1}</b>
+                    </p>
+                    <p
+                      className="builderpage-content-block-remove"
+                      onClick={() => handleRemoveLink(item._id)}
                     >
-                      <option value="github">Github</option>
-                      <option value="youtube">Youtube</option>
-                      <option value="linkedin">Linkedin</option>
-                      <option value="facebook">Facebook</option>
-                      <option value="twitch">Twitch</option>
-                    </select>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="14"
-                      height="9"
-                      viewBox="0 0 14 9"
-                      fill="none"
-                      className="builderpage-content-block-arrow"
-                    >
-                      <path
-                        d="M1 1L7 7L13 1"
-                        stroke="#633CFF"
-                        strokeWidth="2"
-                      />
-                    </svg>
+                      Remove
+                    </p>
+                  </div>
+                  <div className="builderpage-content-block-content">
+                    <div className="builderpage-content-select-container">
+                      <label>Platform</label>
+                      <div className="builderpage-content-select-container-image">
+                        {item.platform ? (
+                          <img
+                            src={`./src/assets/svg/${item.platform}-grey-logo.svg`}
+                            alt="logo-platform"
+                            className="builderpage-content-select-container-logo"
+                          />
+                        ) : (
+                          ""
+                        )}
+                        <select
+                          className="builderpage-select"
+                          onChange={(e) => handleDropdownChange(e, index)}
+                          name="platform"
+                          value={item.platform}
+                        >
+                          <option value="github">Github</option>
+                          <option value="youtube">Youtube</option>
+                          <option value="linkedin">Linkedin</option>
+                          <option value="facebook">Facebook</option>
+                          <option value="twitch">Twitch</option>
+                        </select>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="14"
+                          height="9"
+                          viewBox="0 0 14 9"
+                          fill="none"
+                          className="builderpage-content-block-arrow"
+                        >
+                          <path
+                            d="M1 1L7 7L13 1"
+                            stroke="#633CFF"
+                            strokeWidth="2"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="builderpage-input-container">
+                    <div className="builderpage-input-container-content">
+                      <label>Title*</label>
+                      <div className="builderpage-input-container-image">
+                        <input
+                          type="url"
+                          placeholder="https://github.com/Idiru"
+                          name="url"
+                          className="builderpage-input input-title"
+                          value={item.title}
+                          onChange={(e) => handleLinkTitle(e, index)}
+                          required
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="builderpage-input-container">
+                    <div className="builderpage-input-container-content">
+                      <label>Link*</label>
+                      <div className="builderpage-input-container-image">
+                        <img
+                          className="builderpage-link-svg"
+                          src="./src/assets/svg/link-grey-logo.svg"
+                          alt="link-icon"
+                        />
+                        <input
+                          type="url"
+                          placeholder="https://github.com/Idiru"
+                          name="url"
+                          className="builderpage-input"
+                          value={item.url}
+                          onChange={(e) => handleLinkChange(e, index)}
+                          required
+                        />
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="builderpage-input-container">
-                <div className="builderpage-input-container-content">
-                  <label>Title*</label>
-                  <div className="builderpage-input-container-image">
-                    <input
-                      type="url"
-                      placeholder="https://github.com/Idiru"
-                      name="url"
-                      className="builderpage-input input-title"
-                      value={item.title}
-                      onChange={(e) => handleLinkTitle(e, index)}
-                      required
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="builderpage-input-container">
-                <div className="builderpage-input-container-content">
-                  <label>Link*</label>
-                  <div className="builderpage-input-container-image">
-                    <img
-                      className="builderpage-link-svg"
-                      src="./src/assets/svg/link-grey-logo.svg"
-                      alt="link-icon"
-                    />
-                    <input
-                      type="url"
-                      placeholder="https://github.com/Idiru"
-                      name="url"
-                      className="builderpage-input"
-                      value={item.url}
-                      onChange={(e) => handleLinkChange(e, index)}
-                      required
-                    />
-                  </div>
-                </div>
-              </div>
-            </div> 
-            : ""
-          ))
-         }
+              ) : (
+                ""
+              )
+            )
+          )}
         </div>
         <div className="builderpage-action-container">
           <button className="secondary-button">Preview</button>
@@ -284,7 +291,6 @@ function BuilderPage() {
           </button>
         </div>
       </div>
-    
     </div>
   );
 }
