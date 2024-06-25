@@ -7,7 +7,7 @@ import Modal from 'react-modal';
 Modal.setAppElement('#root');
 
 function PreviewPage() {
-    const API_URL = "http://localhost:5005";
+    const API_URL = import.meta.env.VITE_BASE_URL;
 
     const inputRef = useRef(null); // ref for the input field
 
