@@ -1,8 +1,8 @@
 {
   "rewrites": [
     {
-      "source": "/src/assets/svg/(.*)",
-      "destination": "/src/assets/svg/$1"
+      "source": "./src/assets/svg/(.*)",
+      "destination": "./src/assets/svg/$1"
     },
     {
       "source": "/(.*)",
