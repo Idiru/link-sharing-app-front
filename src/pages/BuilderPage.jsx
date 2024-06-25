@@ -4,11 +4,21 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { v4 as uuidv4 } from "uuid";
+import { useNavigate } from "react-router-dom";
+
 
 function BuilderPage() {
   const [selectedPlatform, setSelectedPlatform] = useState("github");
   const [content, setContent] = useState([]);
   const token = localStorage.getItem("authToken");
+
+  const decodedToken = jwtDecode(token);
+  const userId = decodedToken._id;
+  console.log("token:", token);
+  console.log("userId:", userId);
+
+  const navigate = useNavigate();
+
 
   const handleAddNewLink = () => {
     const newId = uuidv4();
@@ -126,10 +136,6 @@ function BuilderPage() {
   useEffect(() => {
     if (token) {
       try {
-        const decodedToken = jwtDecode(token);
-        const userId = decodedToken._id;
-        console.log("token:", token);
-        console.log("userId:", userId);
         axios
           .get(`${import.meta.env.VITE_BASE_URL}/auth/users/${userId}`, {
             headers: {
@@ -285,7 +291,7 @@ function BuilderPage() {
           )}
         </div>
         <div className="builderpage-action-container">
-          <button className="secondary-button">Preview</button>
+          <button className="secondary-button" onClick={() => navigate(`${userId}/preview`)}>Preview</button>
           <button className="primary-button" onClick={handleSave}>
             Save
           </button>
