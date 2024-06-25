@@ -204,7 +204,7 @@ function BuilderPage() {
                       <div className="builderpage-content-select-container-image">
                         {item.platform ? (
                           <img
-                            src={`./src/assets/svg/${item.platform}-grey-logo.svg`}
+                            src={`/svg/${item.platform}-grey-logo.svg`}
                             alt="logo-platform"
                             className="builderpage-content-select-container-logo"
                           />
@@ -262,7 +262,7 @@ function BuilderPage() {
                       <div className="builderpage-input-container-image">
                         <img
                           className="builderpage-link-svg"
-                          src="./src/assets/svg/link-grey-logo.svg"
+                          src="/svg/link-grey-logo.svg"
                           alt="link-icon"
                         />
                         <input

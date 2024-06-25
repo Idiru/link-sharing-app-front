@@ -1,12 +1,11 @@
 {
   "rewrites": [
     {
-      "source": "./src/assets/svg/(.*)",
-      "destination": "./src/assets/svg/$1"
-    },
-    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
-  ]
+  ], 
+  "staticFiles": {
+    "public": "/public"
+  }
 }
