@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 
 function BuilderPage() {
   const [selectedPlatform, setSelectedPlatform] = useState("github");
+  const [isLoading, setIsLoading] = useState(false);
   const [content, setContent] = useState([]);
   const token = localStorage.getItem("authToken");
   const isEmpty = () => {
@@ -143,36 +144,28 @@ function BuilderPage() {
 
   useEffect(() => {
     if (token) {
-      try {
-        axios
-          .get(`${import.meta.env.VITE_BASE_URL}/auth/users/${userId}`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Cache-Control": "no-cache",
-            },
-          })
-          .then((res) => {
-            console.log(res.data.user.content);
-            if (res.data.user.content) {
-              setContent(res.data.user.content);
-            } else {
-              console.error("No content found in response");
-              setContent([]);
-            }
-          })
-          .catch((error) => {
-            const errorDescription = error.response
-              ? error.response.data.message
-              : "Network Error";
-            console.error("Error fetching user:", errorDescription);
-          });
-      } catch (error) {
-        console.error("Error decoding token:", error);
-      }
+      setIsLoading(true);
+      axios.get(`${import.meta.env.VITE_BASE_URL}/auth/users/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Cache-Control": "no-cache",
+        },
+      })
+      .then((res) => {
+        console.log(res.data.user.content);
+        setContent(res.data.user.content || []);
+      })
+      .catch((error) => {
+        console.error("Error fetching user:", error.response ? error.response.data.message : "Network Error");
+      })
+      .finally(() => {
+        setIsLoading(false); // Ensure loading is set to false after all operations
+      });
     } else {
       console.error("No token found");
+      setIsLoading(false);
     }
-  }, []);
+  }, [token, userId]); 
 
   return (
     <div className="builderpage-container">
@@ -192,7 +185,15 @@ function BuilderPage() {
           </button>
         </div>
         <div className="builderpage-content-builder-container">
-          {isEmpty() ? (
+          {
+            isLoading ? (
+              <div className="builderpage-content-get-started-container">
+              <p>
+               Loading
+              </p>
+            </div>
+            ) : (
+              isEmpty() ? (
             <div className="builderpage-content-get-started-container">
               <img src="./svg/get-started.svg" alt="get started" />
               <h2>Let’s get you started</h2>
@@ -304,7 +305,8 @@ function BuilderPage() {
                 ""
               )
             )
-          )}
+          ))
+          }
         </div>
         <div className="builderpage-action-container">
           <button
