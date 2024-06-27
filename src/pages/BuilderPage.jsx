@@ -159,7 +159,7 @@ function BuilderPage() {
         console.error("Error fetching user:", error.response ? error.response.data.message : "Network Error");
       })
       .finally(() => {
-        setIsLoading(false); // Ensure loading is set to false after all operations
+        setIsLoading(false); 
       });
     } else {
       console.error("No token found");
@@ -189,7 +189,7 @@ function BuilderPage() {
             isLoading ? (
               <div className="builderpage-content-get-started-container">
               <p>
-               Loading
+               Loading...
               </p>
             </div>
             ) : (
