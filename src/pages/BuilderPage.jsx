@@ -6,7 +6,6 @@ import { jwtDecode } from "jwt-decode";
 import { v4 as uuidv4 } from "uuid";
 import { useNavigate } from "react-router-dom";
 
-
 function BuilderPage() {
   const [selectedPlatform, setSelectedPlatform] = useState("github");
   const [content, setContent] = useState([]);
@@ -18,7 +17,6 @@ function BuilderPage() {
   console.log("userId:", userId);
 
   const navigate = useNavigate();
-
 
   const handleAddNewLink = () => {
     const newId = uuidv4();
@@ -37,31 +35,36 @@ function BuilderPage() {
   const handleDropdownChange = (e, index) => {
     const newContent = content.map((item, idx) => {
       if (idx === index) {
-        return { ...item, platform: e.target.value, state: "updated" };
+        const newState = item.state !== "new" ? "updated" : "new";
+        return { ...item, platform: e.target.value, state: newState };
       }
       return item;
     });
     setContent(newContent);
   };
 
-  const handleRemoveLink = (_id) => {
-    // Create a new array where the item with the matching _id is marked as "deleted"
-    const newContent = content.map((item) =>
-      item._id === _id ? { ...item, state: "deleted" } : item
-    );
+  let handleRemoveLink = (_id) => {
+      // Create a new array where the item with the matching _id is marked as "deleted"
+      const newContent = content.map((item) => {
+        if (item._id === _id) {
+          console.log(`Marking item as deleted: ${_id}`);
+          return { ...item, state: "deleted" };
+        }
+        return item;
+      });
+      // Update the state with the new array
+      setContent(newContent);
+      console.log("Deleted state added for _id:", _id, content);
 
-    // Update the state with the new array
-    setContent(newContent);
-    console.log("Deleted state added for _id:", _id, content);
   };
 
   const handleLinkChange = (e, index) => {
     const newContent = content.map((item, idx) => {
       if (idx === index) {
         const newState = item.state !== "new" ? "updated" : "new";
-        return { ...item, url: e.target.value, state: newState};
+        return { ...item, url: e.target.value, state: newState };
       }
-      console.log("Content updated:",content)
+      console.log("Content updated:", content);
       return item;
     });
     setContent(newContent);
@@ -111,23 +114,25 @@ function BuilderPage() {
             }
           )
         ),
-        ...toDelete.map((item) =>
+        ...toDelete.map((item) => {
+          console.log("deleted items:", toDelete);
           axios.delete(`${import.meta.env.VITE_BASE_URL}/content/${item._id}`, {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("authToken")}`,
             },
-          })
-        ),
+          });
+        }),
       ]);
 
       //Remove deleted items from the state
       setContent((prev) =>
         prev
           .filter((item) => item.state !== "deleted")
-          .map((item) => ({ ...item, state: undefined }))
+          .map((item) => ({ ...item }))
       );
 
       console.log("All changes saved successfully.");
+      window.location.reload()
     } catch (error) {
       console.error("Error saving changes:", error);
     }
@@ -252,7 +257,7 @@ function BuilderPage() {
                       <div className="builderpage-input-container-image">
                         <input
                           type="url"
-                          placeholder="https://github.com/Idiru"
+                          placeholder="Github"
                           name="url"
                           className="builderpage-input input-title"
                           value={item.title}
@@ -291,7 +296,12 @@ function BuilderPage() {
           )}
         </div>
         <div className="builderpage-action-container">
-          <button className="secondary-button" onClick={() => navigate(`${userId}/preview`)}>Preview</button>
+          <button
+            className="secondary-button"
+            onClick={() => navigate(`${userId}/preview`)}
+          >
+            Preview
+          </button>
           <button className="primary-button" onClick={handleSave}>
             Save
           </button>
