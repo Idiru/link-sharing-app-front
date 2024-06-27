@@ -10,6 +10,10 @@ function BuilderPage() {
   const [selectedPlatform, setSelectedPlatform] = useState("github");
   const [content, setContent] = useState([]);
   const token = localStorage.getItem("authToken");
+  const isEmpty = () => {
+    const deletedList = content.filter((item) => item.state == "deleted");
+    return content.length == deletedList.length ? true : false
+  }
 
   const decodedToken = jwtDecode(token);
   const userId = decodedToken._id;
@@ -44,18 +48,17 @@ function BuilderPage() {
   };
 
   let handleRemoveLink = (_id) => {
-      // Create a new array where the item with the matching _id is marked as "deleted"
-      const newContent = content.map((item) => {
-        if (item._id === _id) {
-          console.log(`Marking item as deleted: ${_id}`);
-          return { ...item, state: "deleted" };
-        }
-        return item;
-      });
-      // Update the state with the new array
-      setContent(newContent);
-      console.log("Deleted state added for _id:", _id, content);
-
+    // Create a new array where the item with the matching _id is marked as "deleted"
+    const newContent = content.map((item) => {
+      if (item._id === _id) {
+        console.log(`Marking item as deleted: ${_id}`);
+        return { ...item, state: "deleted" };
+      }
+      return item;
+    });
+    // Update the state with the new array
+    setContent(newContent);
+    console.log("Deleted state added for _id:", _id, content);
   };
 
   const handleLinkChange = (e, index) => {
@@ -132,7 +135,7 @@ function BuilderPage() {
       );
 
       console.log("All changes saved successfully.");
-      window.location.reload()
+      window.location.reload();
     } catch (error) {
       console.error("Error saving changes:", error);
     }
@@ -189,8 +192,16 @@ function BuilderPage() {
           </button>
         </div>
         <div className="builderpage-content-builder-container">
-          {!content ? (
-            <div>Loading</div>
+          {isEmpty() ? (
+            <div className="builderpage-content-get-started-container">
+              <img src="./svg/get-started.svg" alt="get started" />
+              <h2>Let’s get you started</h2>
+              <p>
+                Use the “Add new link” button to get started. Once you have more
+                than one link, you can reorder and edit them. We’re here to help
+                you share your profiles with everyone!
+              </p>
+            </div>
           ) : (
             content.map((item, index) =>
               item.state !== "deleted" ? (
