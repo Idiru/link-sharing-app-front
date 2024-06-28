@@ -7,7 +7,6 @@ import { v4 as uuidv4 } from "uuid";
 import { useNavigate } from "react-router-dom";
 
 function BuilderPage() {
-  const [selectedPlatform, setSelectedPlatform] = useState("github");
   const [isLoading, setIsLoading] = useState(false);
   const [content, setContent] = useState([]);
   const token = localStorage.getItem("authToken");
