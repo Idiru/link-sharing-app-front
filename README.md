@@ -2,7 +2,7 @@
 
 ## Global
 ### Environment variables
-`VITE_BASE_URL` has to be define with your back-end url in order make dynamic API calls. 
+`VITE_BASE_URL` should be filled with your back-end url in order make dynamic API calls. 
 
 ## BuilderPage component
 ### Overview
