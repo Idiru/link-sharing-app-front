@@ -23,5 +23,5 @@ The link to the user is made directly by the back-end thanks to the JWT token.
 
 Here are the enpoints used: 
 - To create a new content: `/content/create`
-- To update a content and delete (PUT request for the first one and DELETE for the second one): `/content/${item._id}`
+- To update and delete a content (PUT request for the first one and DELETE for the second one): `/content/${item._id}`
 
