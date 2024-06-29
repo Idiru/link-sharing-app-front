@@ -20,6 +20,8 @@ Here is the enpoint used:
 
 - To add a new user: `/auth/signup`
 
+This page is not accessible if you're logged.
+
 ## SignupValidationPage component
 
 ### Overview
@@ -39,6 +41,9 @@ Here is the enpoint used:
 
 - To add a new user: `/auth/signup`
 
+This page is not accessible if you're logged.
+
+
 ## LoginPage component
 
 ### Overview
@@ -55,6 +60,7 @@ Here is the enpoint used:
 
 Then the JWT token is stored inside the local storage to allow the user to access to private pages.
 
+This page is not accessible if you're logged and all private pages redirect to this one in cased you're not. 
 ## Update User Page Form
 
 ### Overview
