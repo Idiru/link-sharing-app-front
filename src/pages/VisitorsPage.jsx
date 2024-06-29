@@ -7,7 +7,6 @@ import Modal from 'react-modal';
 Modal.setAppElement('#root');
 
 function VisitorsPage() {
-  const API_URL = "http://localhost:5005";
 
   const inputRef = useRef(null); // ref for the input field
 
@@ -20,7 +19,7 @@ function VisitorsPage() {
 
   const fetchUserData = async () => {
     try {
-      const response = await fetch(`${API_URL}/auth/users/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/users/${id}`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('authToken')}`
@@ -41,7 +40,7 @@ function VisitorsPage() {
 
   const fetchUserContent = async () => {
     try {
-      const response = await fetch(`${API_URL}/content/users/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/content/users/${id}`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('authToken')}`
@@ -70,7 +69,7 @@ function VisitorsPage() {
 
   const handleShareLink = async () => {
     try {
-      const response = await fetch(`${API_URL}/content/users/${id}/publish`, {
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/content/users/${id}/publish`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('authToken')}`,

@@ -5,14 +5,13 @@ import { useParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 
 function UpdateUserPage() {
-    const API_URL = "http://localhost:5005";
 
     const navigate = useNavigate();
     const { id } = useParams();
 
     const fetchUserData = async () => {
         try {
-            const response = await fetch(`${API_URL}/auth/users/${id}`, {
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/users/${id}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('authToken')}`
@@ -112,7 +111,7 @@ function UpdateUserPage() {
         data.append('newPassword', newPassword);
 
         try {
-            const response = await fetch(`${API_URL}/auth/update/${id}`, {
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/update/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('authToken')}`,

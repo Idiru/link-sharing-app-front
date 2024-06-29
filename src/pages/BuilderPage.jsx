@@ -7,12 +7,12 @@ import { v4 as uuidv4 } from "uuid";
 import { useNavigate } from "react-router-dom";
 
 function BuilderPage() {
-  const [isLoading, setIsLoading] = useState(false);
-  const [content, setContent] = useState([]);
+  const [isLoading, setIsLoading] = useState(false); //Display the loading screen waiting for the data
+  const [content, setContent] = useState([]); //Main variable to store the whole content from the user
   const token = localStorage.getItem("authToken");
-  const isEmpty = () => {
-    const deletedList = content.filter((item) => item.state == "deleted");
-    return content.length == deletedList.length ? true : false
+  const isEmpty = () => {//Check if the list is empty
+    const deletedList = content.filter((item) => item.state == "deleted"); //Filter the content to have only deleted content
+    return content.length == deletedList.length ? true : false //If the length of the deleted content list is the same than the content one
   }
 
   const decodedToken = jwtDecode(token);

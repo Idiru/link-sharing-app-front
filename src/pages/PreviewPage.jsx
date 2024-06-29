@@ -8,8 +8,6 @@ import { Link } from 'react-router-dom';
 Modal.setAppElement('#root');
 
 function PreviewPage() {
-    const API_URL = "http://localhost:5005";
-    const LOCAL_HOST_URL = "http://localhost:5173"
 
     const inputRef = useRef(null); // ref for the input field
 
@@ -33,7 +31,7 @@ function PreviewPage() {
     const [shareLink, setShareLink] = useState('');
     const fetchUserData = async () => {
         try {
-            const response = await fetch(`${API_URL}/auth/users/${id}`, {
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/users/${id}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('authToken')}`
@@ -55,7 +53,7 @@ function PreviewPage() {
 
     const fetchUserContent = async () => {
         try {
-            const response = await fetch(`${API_URL}/content/users/${id}`, {
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/content/users/${id}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('authToken')}`
@@ -83,7 +81,7 @@ function PreviewPage() {
     };
     const handleShareLink = async () => {
         try {
-            const response = await fetch(`${API_URL}/content/users/${id}/publish`, {
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/content/users/${id}/publish`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
@@ -94,7 +92,7 @@ function PreviewPage() {
             if (response.ok) {
                 const result = await response.json();
                 console.log('Content published successfully');
-                setShareLink(`${LOCAL_HOST_URL}/devlinks/${userData.userName}`);
+                setShareLink(`${import.meta.env.VITE_BASE_URL_FRONT}/devlinks/${userData.userName}`);
                 setModalIsOpen(true);
             } else {
                 console.error('Failed to publish content');
@@ -116,7 +114,7 @@ function PreviewPage() {
             <div className='upper-container'>
                 <div className='btn-container'>
                     <button className='back-btn' onClick={() => navigate(`/`)}>
-                        <Link to={`${API_URL}/`} />
+                        <Link to={`${import.meta.env.VITE_BASE_URL}/`} />
                         <p>Back To Editor</p>
                     </button>
                     <button className='share-btn' onClick={handleShareLink}>
