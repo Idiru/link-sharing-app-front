@@ -11,8 +11,8 @@ The LoginPage component enables users to log into their accounts by entering the
 ### Core functionalities
 - <u>**Authentication Handling:**</u> The component connects with a backend server to verify user credentials and retrieve a token upon successful login.
 
-Here are the enpoint used: 
-- To create a new content: `/auth/login`
+Here is the enpoint used: 
+- To login: `/auth/login`
 
 Then the JWT token is stored inside the local storage to allow the user to access to private pages.
 
