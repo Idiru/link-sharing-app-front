@@ -14,6 +14,8 @@ The SignupPage component enables users to signup to the platform by filling all 
 Here is the enpoint used: 
 - To add a new user: `/auth/signup`
 
+This page is not accessible if you're logged.
+
 ## SignupValidationPage component
 ### Overview
 The SignupPageValidation page is just here for UX. It allows the user to know that his account creation worked 
@@ -27,6 +29,9 @@ The SignupPageValidation page is just here for UX. It allows the user to know th
 
 Here is the enpoint used: 
 - To add a new user: `/auth/signup`
+
+This page is not accessible if you're logged.
+
 ## LoginPage component
 ### Overview
 The LoginPage component enables users to log into their accounts by entering their credentials. It features a form for email and password input, handles user authentication via an API, and manages navigation based on the authentication state. 
@@ -39,6 +44,7 @@ Here is the enpoint used:
 
 Then the JWT token is stored inside the local storage to allow the user to access to private pages.
 
+This page is not accessible if you're logged and all private pages redirect to this one in cased you're not. 
 
 ## BuilderPage component
 ### Overview
