@@ -126,7 +126,7 @@ function PreviewPage() {
                 <div className='info-container'>
                     <div className='img-name'>
                         <img src={userData?.profileImage} alt="Profile" />
-                        <h3>{userData ? `${userData.firstName} ${userData.lastName}` : 'Loading...'}</h3>
+                        <h3>{userData ? `${userData.firstName} ${userData.lastName}` ? `${userData.firstName} ${userData.lastName}` : ` ${userData.userName}` : 'Loading...'}</h3>
                     </div>
                     <div className='content-container'  >
                         {userContent && userContent.length > 0 ? (
