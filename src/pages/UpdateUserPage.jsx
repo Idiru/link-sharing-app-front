@@ -5,14 +5,13 @@ import { useParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 
 function UpdateUserPage() {
-    const API_URL = "http://localhost:5005";
 
     const navigate = useNavigate();
     const { id } = useParams();
 
     const fetchUserData = async () => {
         try {
-            const response = await fetch(`${API_URL}/auth/users/${id}`, {
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/users/${id}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('authToken')}`
@@ -94,7 +93,6 @@ function UpdateUserPage() {
     };
 
     const saveData = async (e) => {
-        e.preventDefault();
         const { email, firstName, lastName, userName, currentPassword, newPassword, repeatedPassword } = state;
 
         if (newPassword !== repeatedPassword) {
@@ -112,7 +110,7 @@ function UpdateUserPage() {
         data.append('newPassword', newPassword);
 
         try {
-            const response = await fetch(`${API_URL}/auth/update/${id}`, {
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/update/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
@@ -126,7 +124,7 @@ function UpdateUserPage() {
                 if (result.user.profileImage) {
                     setProfileImageUrl(result.user.profileImage);
                 }
-                navigate('/link');
+                window.location.reload();
             } else {
                 const errorData = await response.json();
                 console.error("Failed to update user:", errorData.message);
@@ -139,8 +137,7 @@ function UpdateUserPage() {
     };
 
     const cancelChanges = (e) => {
-        e.preventDefault();
-        navigate('/links'); // for the moment
+        navigate("/")
     };
 
     return (
@@ -211,6 +208,7 @@ function UpdateUserPage() {
                             type="password"
                             value={state.currentPassword}
                             onChange={handleChange}
+                            autoComplete="off"
                         ></input>
                     </div>
                     <div className="input-container">
@@ -220,6 +218,7 @@ function UpdateUserPage() {
                             type="password"
                             value={state.newPassword}
                             onChange={handleChange}
+                            autoComplete="off"
                         ></input>
                     </div>
                     <div className="input-container">
