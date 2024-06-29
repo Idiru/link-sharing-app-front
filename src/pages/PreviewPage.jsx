@@ -3,15 +3,16 @@ import { useNavigate, useParams } from "react-router-dom";
 import '../styles/pages/PreviewPage.css';
 import 'remixicon/fonts/remixicon.css';
 import Modal from 'react-modal';
+import { Link } from 'react-router-dom';
 
 Modal.setAppElement('#root');
 
 function PreviewPage() {
-    const API_URL = import.meta.env.VITE_BASE_URL;
+    const API_URL = "http://localhost:5005";
+    const LOCAL_HOST_URL = "http://localhost:5173"
 
     const inputRef = useRef(null); // ref for the input field
 
-    const navigateToUrl = useNavigate()
     // important social media 
     const platforms = [
         { platform: 'youtube', color: 'red', icon: 'ri-youtube-fill' },
@@ -93,7 +94,7 @@ function PreviewPage() {
             if (response.ok) {
                 const result = await response.json();
                 console.log('Content published successfully');
-                setShareLink(`${API_URL}/devlinks/${userData.userName}`);
+                setShareLink(`${LOCAL_HOST_URL}/devlinks/${userData.userName}`);
                 setModalIsOpen(true);
             } else {
                 console.error('Failed to publish content');
@@ -114,7 +115,8 @@ function PreviewPage() {
         <div style={{ background: 'var(--Light-Grey, #FAFAFA)' }}>
             <div className='upper-container'>
                 <div className='btn-container'>
-                    <button className='back-btn' onClick={() => navigate(`/users/${id}`)}>
+                    <button className='back-btn' onClick={() => navigate(`/`)}>
+                        <Link to={`${API_URL}/`} />
                         <p>Back To Editor</p>
                     </button>
                     <button className='share-btn' onClick={handleShareLink}>
