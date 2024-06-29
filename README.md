@@ -4,6 +4,19 @@
 ### Environment variables
 `VITE_BASE_URL` should be filled with your back-end url in order make dynamic API calls. 
 
+## Login
+### Overview
+The LoginPage component enables users to log into their accounts by entering their credentials. It features a form for email and password input, handles user authentication via an API, and manages navigation based on the authentication state. 
+
+### Core functionalities
+- <u>**Authentication Handling:**</u> The component connects with a backend server to verify user credentials and retrieve a token upon successful login.
+
+Here are the enpoint used: 
+- To create a new content: `/auth/login`
+
+Then the JWT token is stored inside the local storage to allow the user to access to private pages.
+
+
 ## BuilderPage component
 ### Overview
 The BuilderPage component is part of the application that allows users to manage links and content dynamically. It integrates various features such as adding new links, updating, and removing existing ones. This component utilizes React hooks for state management and interacts with a backend via axios for data persistence.

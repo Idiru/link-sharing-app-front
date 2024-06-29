@@ -6,22 +6,34 @@ import Snackbar from "@mui/material/Snackbar";
 import '../styles/pages/SignupPage.css'
 
 function LoginPage() {
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(""); 
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState(undefined);
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false); //To handle the display of the error message toast
 
+  //To open/close the error message when the user click away 
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  //To redirect the user to the homepage when he is logged
   const navigate = useNavigate();
 
-  /*  UPDATE - get authenticateUser from the context */
+  // To store the token
   const { storeToken, authenticateUser } = useContext(AuthContext);
 
+  // To handle inputs modifications
   const handleEmail = (e) => setEmail(e.target.value);
   const handlePassword = (e) => setPassword(e.target.value);
 
+    // To connect the user 
   const handleLoginSubmit = (e) => {
-    e.preventDefault();
-    const requestBody = { email, password };
+    e.preventDefault();//avoid refreshing the page
+    const requestBody = { email, password }; //We send the email and the password to authentify the user
 
     axios
       .post(`${import.meta.env.VITE_BASE_URL}/auth/login`, requestBody)
@@ -41,15 +53,6 @@ function LoginPage() {
         setErrorMessage(errorDescription);
         setOpen(true);
       });
-  };
-
-
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
-    setOpen(false);
   };
 
   return (
