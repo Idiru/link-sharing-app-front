@@ -22,7 +22,7 @@ function App() {
         <Route path='/signup-validation' element={<SignupValidationPage />} />
         <Route path='/update/:id' element={<Private><UpdateUserPage /></Private>} />
         <Route path='/' element={<Private><BuilderPage /></Private>} />
-        <Route path='/links' element={<VisitorsPage />} />
+        <Route path='/devlinks/:userName' element={<VisitorsPage />} />
         <Route path='/:id/preview' element={<PreviewPage />} />
       </Routes>
     </>
