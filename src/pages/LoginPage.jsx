@@ -1,6 +1,6 @@
 import { useState, useContext, useEffect } from "react";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { AuthContext } from "../context/auth.context";
 import Snackbar from "@mui/material/Snackbar";
 import '../styles/pages/SignupPage.css'
@@ -10,7 +10,11 @@ function LoginPage() {
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState(undefined);
   const [open, setOpen] = useState(false); //To handle the display of the error message toast
-  const { isLoggedIn, isLoading } = useContext(AuthContext);
+  const { isLoggedIn } = useContext(AuthContext); //To know if the user is logged
+
+  //To display the right error message in case you're redirected here cause you try to acces to a private page unlogged
+  const location = useLocation();
+  const { from, reason } = location.state || { from: null, reason: null };
 
   //To open/close the error message when the user click away 
   const handleClose = (event, reason) => {
@@ -61,6 +65,21 @@ function LoginPage() {
     navigate("/", { replace: true });
 }
 
+//To manage the not logged error message 
+useEffect(() => {
+  if (reason) {
+    let message = '';
+    switch (reason) {
+      case 'notAuthenticated':
+        message = 'You must be logged in to access this page.';
+        break;
+      default:
+        message = 'Please log in to continue.';
+    }
+    setErrorMessage(message);
+    setOpen(true); 
+  }
+}, [reason]);
   
 
   return (

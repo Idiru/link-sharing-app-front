@@ -12,7 +12,7 @@ function Private({ children }) {
 
     if (!isLoggedIn) {
         // Redirect to login page if not logged in
-        navigate("/login", { replace: true });
+        navigate("/login", { replace: true, state: { from: 'privateRoute', reason: 'notAuthenticated' } });
     }
 
     return <>{children}</>;

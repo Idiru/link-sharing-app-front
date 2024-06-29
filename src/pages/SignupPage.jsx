@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState, useContext } from "react";
 import axios from "axios";
 import { AuthContext } from "../context/auth.context";
-
+import Snackbar from "@mui/material/Snackbar";
 
 function SignupPage() {
   const [email, setEmail] = useState("");
@@ -11,11 +11,20 @@ function SignupPage() {
   const [repeatedPassword, setRepeatedPassword] = useState("");
   const [userName, setUsername] = useState("");
   const [errorMessage, setErrorMessage] = useState(undefined);
+  const [open, setOpen] = useState(false); //To handle the display of the error message toast
   const { isLoggedIn } = useContext(AuthContext);
-
 
   //To redirect use to the SignupValidationPage
   const navigate = useNavigate();
+
+  //To open/close the error message when the user click away
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+  };
 
   //To handle modifications inside the inputs
   const handleEmail = (e) => setEmail(e.target.value);
@@ -29,14 +38,21 @@ function SignupPage() {
 
     const reqBody = { userName, email, password, repeatedPassword }; //We send all needed data
 
+    if (password !== repeatedPassword) {
+      const errorDescription = "Passwords don't match."
+      setErrorMessage(errorDescription);
+      return setOpen(true);
+    }
+
     axios
       .post(`${import.meta.env.VITE_BASE_URL}/auth/signup`, reqBody)
       .then((res) => {
         navigate("/signup-validation"); //In case of success, the user is redirected to validation page
       })
-      .catch((err) => {
-        const errDescription = error.res.data.message;
-        setErrorMessage(errDescription);
+      .catch((error) => {
+        const errorDescription = error.response.data.message;
+        setErrorMessage(errorDescription);
+        setOpen(true);
       });
   };
 
@@ -109,7 +125,7 @@ function SignupPage() {
           Let’s get you started sharing your links!{" "}
         </p>
         <form className="signup-form" onSubmit={handleSignupSubmit}>
-          <label className="signup-label">Username</label>
+          <label className="signup-label">Username*</label>
           <div className="input-container">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -124,16 +140,15 @@ function SignupPage() {
               />
             </svg>
             <input
-              type="name"
-              id="email"
+              type="text"
               placeholder="John Doe"
-              name="email"
+              name="userName"
               onChange={handleUserName}
               required
               className="signup-input"
             />
           </div>
-          <label>Email address</label>
+          <label>Email address*</label>
           <div className="input-container">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -149,7 +164,6 @@ function SignupPage() {
             </svg>
             <input
               type="email"
-              id="email"
               placeholder="e.g. alex@email.com"
               name="email"
               onChange={handleEmail}
@@ -157,7 +171,7 @@ function SignupPage() {
               className="signup-input"
             />
           </div>
-          <label>Create password</label>
+          <label>Create password*</label>
           <div className="input-container">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -180,7 +194,7 @@ function SignupPage() {
               className="signup-input"
             />
           </div>
-          <label>Confirm password</label>
+          <label>Confirm password*</label>
           <div className="input-container">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -204,7 +218,7 @@ function SignupPage() {
             />
           </div>{" "}
           <p className="signup-password-notice">
-            Password must contain at least 8 characters
+          Password must have at least 8 characters and contain at least one number, one lowercase and one uppercase letter.
           </p>
           <button
             type={"submit"}
@@ -218,6 +232,17 @@ function SignupPage() {
           <Link to="/login">Login</Link>
         </div>
       </div>
+      <Snackbar
+        sx={{
+          ".css-1eqdgzv-MuiPaper-root-MuiSnackbarContent-root": {
+            backgroundColor: "#FF3939",
+          },
+        }}
+        open={open}
+        autoHideDuration={5000}
+        onClose={handleClose}
+        message={errorMessage}
+      />
     </div>
   );
 }
