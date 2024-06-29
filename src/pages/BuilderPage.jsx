@@ -10,21 +10,24 @@ function BuilderPage() {
   const [isLoading, setIsLoading] = useState(false); //Display the loading screen waiting for the data
   const [content, setContent] = useState([]); //Main variable to store the whole content from the user
   const token = localStorage.getItem("authToken");
-  const isEmpty = () => {//Check if the list is empty
+  const isEmpty = () => {
+    //Check if the list is empty
     const deletedList = content.filter((item) => item.state == "deleted"); //Filter the content to have only deleted content
-    return content.length == deletedList.length ? true : false //If the length of the deleted content list is the same than the content one
-  }
+    return content.length == deletedList.length ? true : false; //If the length of the deleted content list is the same than the content one
+  };
 
+  //Get the user id from the token to target it inside our api calls
   const decodedToken = jwtDecode(token);
   const userId = decodedToken._id;
-  console.log("token:", token);
-  console.log("userId:", userId);
 
+  //To navigate
   const navigate = useNavigate();
 
+  //Function to add a new link inside the builder
   const handleAddNewLink = () => {
-    const newId = uuidv4();
+    const newId = uuidv4(); //Just created it in case we need it later, maybe not needed
 
+    //Define a new content with the default and empties stuff
     const newBlock = {
       block: "link",
       platform: "github",
@@ -33,46 +36,35 @@ function BuilderPage() {
       uuid: newId,
     };
     setContent((prev) => [...prev, newBlock]);
-    console.log(content);
   };
 
+  //Handle content modification
+
+  //Handle change inside the input list fields
   const handleDropdownChange = (e, index) => {
     const newContent = content.map((item, idx) => {
       if (idx === index) {
-        const newState = item.state !== "new" ? "updated" : "new";
-        return { ...item, platform: e.target.value, state: newState };
+        const newState = item.state !== "new" ? "updated" : "new"; //Condition to avoid to define it as "updated" a brand new content which is not yet created inside the DB (cause the state "updated" will make a PUT request on something which does not exist yet)
+        return { ...item, platform: e.target.value, state: newState }; //Modifing the content with the new data
       }
       return item;
     });
-    setContent(newContent);
+    setContent(newContent); //Set the content list with the items modificated
   };
 
-  let handleRemoveLink = (_id) => {
-    // Create a new array where the item with the matching _id is marked as "deleted"
-    const newContent = content.map((item) => {
-      if (item._id === _id) {
-        console.log(`Marking item as deleted: ${_id}`);
-        return { ...item, state: "deleted" };
-      }
-      return item;
-    });
-    // Update the state with the new array
-    setContent(newContent);
-    console.log("Deleted state added for _id:", _id, content);
-  };
-
+  //Handle change inside the link input fields
   const handleLinkChange = (e, index) => {
     const newContent = content.map((item, idx) => {
       if (idx === index) {
         const newState = item.state !== "new" ? "updated" : "new";
         return { ...item, url: e.target.value, state: newState };
       }
-      console.log("Content updated:", content);
       return item;
     });
     setContent(newContent);
   };
 
+  //Handle change inside the title inputfields
   const handleLinkTitle = (e, index) => {
     const newContent = content.map((item, idx) => {
       if (idx === index) {
@@ -84,18 +76,32 @@ function BuilderPage() {
     setContent(newContent);
   };
 
+  //Handle removed content inside the list of content
+  let handleRemoveLink = (_id) => {
+    //We get the id when you click on a specific content inside the HTML
+    // Create a new array where the item with the matching _id is marked as "deleted"
+    const newContent = content.map((item) => {
+      if (item._id === _id) {
+        return { ...item, state: "deleted" };
+      }
+      return item;
+    });
+    // Update the state with the new array
+    setContent(newContent);
+  };
+
+  //One function to manage all interactions with the back-end, thanks to a Save button
   const handleSave = async () => {
-    // Managing content creation, update and delete
+    // Creating new lists focus on content states new, updated and deleted
     const toCreate = content.filter((item) => item.state === "new");
     const toUpdate = content.filter((item) => item.state === "updated");
     const toDelete = content.filter((item) => item.state == "deleted");
-    console.log("to update:", toUpdate);
 
-    // Use Promise.all to handle all requests simultaneously
+    // A promise to handle the 3 kinds of requests, we iterate on each item of the focused list to do a request for each one
     try {
       await Promise.all([
+        // To create a content
         ...toCreate.map((item) => {
-          console.log("Saving item:", item);
           return axios
             .post(`${import.meta.env.VITE_BASE_URL}/content/create`, item, {
               headers: {
@@ -106,6 +112,7 @@ function BuilderPage() {
               return { ...item, ...response.data, state: "created" };
             });
         }),
+        // To update a content
         ...toUpdate.map((item) =>
           axios.put(
             `${import.meta.env.VITE_BASE_URL}/content/${item._id}`,
@@ -117,8 +124,8 @@ function BuilderPage() {
             }
           )
         ),
+        // To delete a content
         ...toDelete.map((item) => {
-          console.log("deleted items:", toDelete);
           axios.delete(`${import.meta.env.VITE_BASE_URL}/content/${item._id}`, {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("authToken")}`,
@@ -127,7 +134,7 @@ function BuilderPage() {
         }),
       ]);
 
-      //Remove deleted items from the state
+      //Then we need to remove deleted items from the content state
       setContent((prev) =>
         prev
           .filter((item) => item.state !== "deleted")
@@ -143,28 +150,31 @@ function BuilderPage() {
 
   useEffect(() => {
     if (token) {
-      setIsLoading(true);
-      axios.get(`${import.meta.env.VITE_BASE_URL}/auth/users/${userId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Cache-Control": "no-cache",
-        },
-      })
-      .then((res) => {
-        console.log(res.data.user.content);
-        setContent(res.data.user.content || []);
-      })
-      .catch((error) => {
-        console.error("Error fetching user:", error.response ? error.response.data.message : "Network Error");
-      })
-      .finally(() => {
-        setIsLoading(false); 
-      });
+      setIsLoading(true); //To start the loading screen 
+      axios
+        .get(`${import.meta.env.VITE_BASE_URL}/auth/users/${userId}`, { //To get the current content a the user and to fill the builder
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Cache-Control": "no-cache",
+          },
+        })
+        .then((res) => {
+          setContent(res.data.user.content || []);
+        })
+        .catch((error) => {
+          console.error(
+            "Error fetching user:",
+            error.response ? error.response.data.message : "Network Error"
+          );
+        })
+        .finally(() => {
+          setIsLoading(false); //To stop the loading screen  
+        });
     } else {
       console.error("No token found");
       setIsLoading(false);
     }
-  }, [token, userId]); 
+  }, [token, userId]);
 
   return (
     <div className="builderpage-container">
@@ -184,15 +194,11 @@ function BuilderPage() {
           </button>
         </div>
         <div className="builderpage-content-builder-container">
-          {
-            isLoading ? (
-              <div className="builderpage-content-get-started-container">
-              <p>
-               Loading...
-              </p>
+          {isLoading ? (
+            <div className="builderpage-content-get-started-container">
+              <p>Loading...</p>
             </div>
-            ) : (
-              isEmpty() ? (
+          ) : isEmpty() ? (
             <div className="builderpage-content-get-started-container">
               <img src="./svg/get-started.svg" alt="get started" />
               <h2>Let’s get you started</h2>
@@ -304,8 +310,7 @@ function BuilderPage() {
                 ""
               )
             )
-          ))
-          }
+          )}
         </div>
         <div className="builderpage-action-container">
           <button

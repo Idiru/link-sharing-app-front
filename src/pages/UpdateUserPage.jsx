@@ -228,6 +228,7 @@ function UpdateUserPage() {
                             type="password"
                             value={state.repeatedPassword}
                             onChange={handleChange}
+                            autoComplete="off"
                         ></input>
                     </div>
                 </div>
