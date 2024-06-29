@@ -14,7 +14,7 @@ import { jwtDecode } from "jwt-decode";
 export default function MenuAppBar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [userData, setuserData] = useState(null);
-  
+
   const token = localStorage.getItem("authToken");
   const decodedToken = jwtDecode(token);
   const userId = decodedToken._id;
@@ -33,20 +33,23 @@ export default function MenuAppBar() {
   };
 
   useEffect(() => {
-    const token = localStorage.getItem('authToken'); // Récupération du token du localStorage
+    const token = localStorage.getItem("authToken"); // Récupération du token du localStorage
     if (token) {
-      axios.get(`${import.meta.env.VITE_BASE_URL}/user/username`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      })
-      .then(res => {
-        setuserData(res.data)
-      })
-      .catch(error => {
-        const errorDescription = error.res ? error.res.data.message : 'Network Error';
-        console.error('Error fetching user:', errorDescription);
-      });
+      axios
+        .get(`${import.meta.env.VITE_BASE_URL}/user/username`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          setuserData(res.data);
+        })
+        .catch((error) => {
+          const errorDescription = error.res
+            ? error.res.data.message
+            : "Network Error";
+          console.error("Error fetching user:", errorDescription);
+        });
     }
   }, []);
 
@@ -130,7 +133,7 @@ export default function MenuAppBar() {
               </svg>
             </div>
           </Typography>
-          <div> 
+          <div>
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -157,7 +160,11 @@ export default function MenuAppBar() {
                   fill="#633CFF"
                 />
               </svg>
-              {userData && (<p className="navbar-menu-list navbar-logout navbar-username">{userData.username}</p>)}
+              {userData && (
+                <p className="navbar-menu-list navbar-logout navbar-username">
+                  {userData.username}
+                </p>
+              )}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="10"
@@ -203,9 +210,9 @@ export default function MenuAppBar() {
               >
                 <p
                   className="navbar-menu-list navbar-logout"
-                  onClick={() => logout()}
+                  onClick={() => navigate(`/update/${userId}`)}
                 >
-                  Logout
+                  Profil
                 </p>
               </MenuItem>
               <MenuItem
@@ -217,9 +224,9 @@ export default function MenuAppBar() {
               >
                 <p
                   className="navbar-menu-list navbar-logout"
-                  onClick={() => navigate(`/update/${userId}`)}
+                  onClick={() => logout()}
                 >
-                  Profil
+                  Logout
                 </p>
               </MenuItem>
             </Menu>
