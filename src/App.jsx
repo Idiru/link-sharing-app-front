@@ -9,14 +9,13 @@ import BuilderPage from './pages/BuilderPage'
 import VisitorsPage from './pages/VisitorsPage'
 import Private from './components/Private'
 import PreviewPage from './pages/PreviewPage'
-function App() {
 
+function App() {
 
   return (
     <>
 
       <Routes>
-        {/* <Route path='/' element={<HomePage />}/> */}
         <Route path='/login' element={<LoginPage />} />
         <Route path='/signup' element={<SignupPage />} />
         <Route path='/signup-validation' element={<SignupValidationPage />} />

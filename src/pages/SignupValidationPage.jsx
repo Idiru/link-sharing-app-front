@@ -3,12 +3,23 @@ import "../styles/pages/SignupValidationPage.css";
 import Confetti from "react-confetti";
 import { useWindowSize } from "react-use";
 import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { AuthContext } from "../context/auth.context";
+
+
 
 function SignupValidationPage() {
   const { width, height } = useWindowSize();
+  const { isLoggedIn } = useContext(AuthContext);
 
-  //To redirect the user to the login page
+
+  //To redirect the user
   const navigate = useNavigate();
+
+  if (isLoggedIn) {
+    // Redirect to homepage page if the user is logged in
+    navigate("/", { replace: true });
+  }
 
 
   return (

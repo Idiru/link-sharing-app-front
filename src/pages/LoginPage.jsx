@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/auth.context";
@@ -10,6 +10,7 @@ function LoginPage() {
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState(undefined);
   const [open, setOpen] = useState(false); //To handle the display of the error message toast
+  const { isLoggedIn, isLoading } = useContext(AuthContext);
 
   //To open/close the error message when the user click away 
   const handleClose = (event, reason) => {
@@ -54,6 +55,13 @@ function LoginPage() {
         setOpen(true);
       });
   };
+
+  if (isLoggedIn) {
+    // Redirect to homepage page if the user is logged in
+    navigate("/", { replace: true });
+}
+
+  
 
   return (
     <div className="signup-container login-container">
