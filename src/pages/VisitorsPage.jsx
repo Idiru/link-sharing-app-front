@@ -62,13 +62,17 @@ function VisitorsPage() {
         <div className='info-container'>
           <div className='img-name'>
             <img src={userData?.profileImage} alt="Profile" />
-            <h3>{userData ? `${userData.firstName} ${userData.lastName}` : 'Loading...'}</h3>
-          </div>
+            <h3>
+              {userData ? (
+                userData.firstName && userData.lastName ?
+                  `${userData.firstName} ${userData.lastName}` :
+                  userData.userName
+              ) : 'Loading...'}
+            </h3>           </div>
           <div className='content-container'>
             {userContent && userContent.length > 0 ? (
 
               userContent.map((content) => {
-                console.log(content)
                 const platformData = platforms.find(p => p.platform === content.platform?.toLowerCase());
                 return (
 
