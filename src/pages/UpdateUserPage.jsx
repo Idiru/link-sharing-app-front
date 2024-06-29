@@ -93,7 +93,6 @@ function UpdateUserPage() {
     };
 
     const saveData = async (e) => {
-        e.preventDefault();
         const { email, firstName, lastName, userName, currentPassword, newPassword, repeatedPassword } = state;
 
         if (newPassword !== repeatedPassword) {
@@ -125,7 +124,7 @@ function UpdateUserPage() {
                 if (result.user.profileImage) {
                     setProfileImageUrl(result.user.profileImage);
                 }
-                navigate('/link');
+                window.location.reload();
             } else {
                 const errorData = await response.json();
                 console.error("Failed to update user:", errorData.message);
@@ -138,8 +137,7 @@ function UpdateUserPage() {
     };
 
     const cancelChanges = (e) => {
-        e.preventDefault();
-        navigate('/links'); // for the moment
+        navigate("/")
     };
 
     return (
@@ -210,6 +208,7 @@ function UpdateUserPage() {
                             type="password"
                             value={state.currentPassword}
                             onChange={handleChange}
+                            autoComplete="off"
                         ></input>
                     </div>
                     <div className="input-container">
@@ -219,6 +218,7 @@ function UpdateUserPage() {
                             type="password"
                             value={state.newPassword}
                             onChange={handleChange}
+                            autoComplete="off"
                         ></input>
                     </div>
                     <div className="input-container">

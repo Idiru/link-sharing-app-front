@@ -9,11 +9,15 @@ import Menu from "@mui/material/Menu";
 import "../styles/components/Navbar.css";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
+import { jwtDecode } from "jwt-decode";
 
 export default function MenuAppBar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [userData, setuserData] = useState(null);
+  
+  const token = localStorage.getItem("authToken");
+  const decodedToken = jwtDecode(token);
+  const userId = decodedToken._id;
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -202,6 +206,20 @@ export default function MenuAppBar() {
                   onClick={() => logout()}
                 >
                   Logout
+                </p>
+              </MenuItem>
+              <MenuItem
+                onClick={handleClose}
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                <p
+                  className="navbar-menu-list navbar-logout"
+                  onClick={() => navigate(`/update/${userId}`)}
+                >
+                  Profil
                 </p>
               </MenuItem>
             </Menu>
