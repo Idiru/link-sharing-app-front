@@ -4,7 +4,20 @@
 ### Environment variables
 `VITE_BASE_URL` should be filled with your back-end url in order make dynamic API calls. 
 
-## Login
+## SignupPage component
+### Overview
+The SignupPage component enables users to signup to the platform by filling all mandatories data. It features a form with username, email, password, repeat password inputs. 
+
+### Core functionalities
+- <u>**Add new user:**</u> The component connects with a backend server to create a new user. .
+
+Here is the enpoint used: 
+- To add a new user: `/auth/signup`
+
+## SignupValidationPage component
+### Overview
+
+## LoginPage component
 ### Overview
 The LoginPage component enables users to log into their accounts by entering their credentials. It features a form for email and password input, handles user authentication via an API, and manages navigation based on the authentication state. 
 

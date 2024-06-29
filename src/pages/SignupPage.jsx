@@ -11,22 +11,25 @@ function SignupPage() {
   const [userName, setUsername] = useState("");
   const [errorMessage, setErrorMessage] = useState(undefined);
 
+  //To redirect use to the SignupValidationPage
   const navigate = useNavigate();
 
+  //To handle modifications inside the inputs
   const handleEmail = (e) => setEmail(e.target.value);
   const handlePassword = (e) => setPassword(e.target.value);
   const handleRepeatedPassword = (e) => setRepeatedPassword(e.target.value);
   const handleUserName = (e) => setUsername(e.target.value);
 
+  //To register the user
   const handleSignupSubmit = (e) => {
-    e.preventDefault();
+    e.preventDefault(); //To avoid refreshing the page
 
-    const reqBody = { userName, email, password, repeatedPassword };
+    const reqBody = { userName, email, password, repeatedPassword }; //We send all needed data
 
     axios
       .post(`${import.meta.env.VITE_BASE_URL}/auth/signup`, reqBody)
       .then((res) => {
-        navigate("/signup-validation");
+        navigate("/signup-validation"); //In case of success, the user is redirected to validation page
       })
       .catch((err) => {
         const errDescription = error.res.data.message;
