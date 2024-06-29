@@ -4,6 +4,42 @@
 ### Environment variables
 `VITE_BASE_URL` should be filled with your back-end url in order make dynamic API calls. 
 
+## SignupPage component
+### Overview
+The SignupPage component enables users to signup to the platform by filling all mandatories data. It features a form with username, email, password, repeat password inputs. 
+
+### Core functionalities
+- <u>**Add new user:**</u> The component connects with a backend server to create a new user. .
+
+Here is the enpoint used: 
+- To add a new user: `/auth/signup`
+
+## SignupValidationPage component
+### Overview
+The SignupPageValidation page is just here for UX. It allows the user to know that his account creation worked 
+
+### Core functionalities
+- <u>**Confetti:**</u> Tons of conffeti are falling to celebrate properly this account creation.
+
+2 parameters are handling this effect: 
+- `recycle={false}`: Avoid to repeat indefinitely the effect. They fall only once. 
+- `numberOfPieces={3000}`: Define the number of confetti. It can impact the performances. 
+
+Here is the enpoint used: 
+- To add a new user: `/auth/signup`
+## LoginPage component
+### Overview
+The LoginPage component enables users to log into their accounts by entering their credentials. It features a form for email and password input, handles user authentication via an API, and manages navigation based on the authentication state. 
+
+### Core functionalities
+- <u>**Authentication Handling:**</u> The component connects with a backend server to verify user credentials and retrieve a token upon successful login.
+
+Here is the enpoint used: 
+- To login: `/auth/login`
+
+Then the JWT token is stored inside the local storage to allow the user to access to private pages.
+
+
 ## BuilderPage component
 ### Overview
 The BuilderPage component is part of the application that allows users to manage links and content dynamically. It integrates various features such as adding new links, updating, and removing existing ones. This component utilizes React hooks for state management and interacts with a backend via axios for data persistence.
