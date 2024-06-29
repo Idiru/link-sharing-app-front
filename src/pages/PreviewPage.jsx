@@ -40,9 +40,10 @@ function PreviewPage() {
 
             if (response.ok) {
                 const result = await response.json();
-                const { email, firstName, lastName, userName, profileImage } = result.user;
+                const { firstName, lastName, userName, profileImage } = result.user;
                 console.log(result.user)
-                setUserData({ email, firstName, lastName, userName, profileImage });
+                setUserData({ firstName, lastName, userName, profileImage });
+                console.log(userData)
             } else {
                 console.error('Failed to fetch user data');
             }
@@ -126,8 +127,13 @@ function PreviewPage() {
                 <div className='info-container'>
                     <div className='img-name'>
                         <img src={userData?.profileImage} alt="Profile" />
-                        <h3>{userData ? `${userData.firstName} ${userData.lastName}` ? `${userData.firstName} ${userData.lastName}` : ` ${userData.userName}` : 'Loading...'}</h3>
-                    </div>
+                        <h3>
+                            {userData ? (
+                                userData.firstName && userData.lastName ?
+                                    `${userData.firstName} ${userData.lastName}` :
+                                    userData.userName
+                            ) : 'Loading...'}
+                        </h3>                    </div>
                     <div className='content-container'  >
                         {userContent && userContent.length > 0 ? (
                             userContent.map((content) => {
