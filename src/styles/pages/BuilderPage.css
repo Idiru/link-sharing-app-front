@@ -10,6 +10,10 @@
   border-radius: 12px;
 }
 
+.builderpage-preview-container {
+  display: none;
+}
+
 .builderpage-content-header-container h2 {
   font-size: 24px;
 }
@@ -35,7 +39,7 @@
 }
 
 .builderpage-content-block-remove {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .builderpage-content-block-header {
@@ -98,8 +102,7 @@
 }
 
 .input-title {
-    padding-left: 20px;
-
+  padding-left: 20px;
 }
 
 .builderpage-input-container-image img {
@@ -134,7 +137,7 @@
 }
 
 .builderpage-content-get-started-container {
-  background-color:#fafafa;
+  background-color: #fafafa;
   height: 100%;
   width: 100%;
   display: flex;
@@ -152,5 +155,76 @@
   .builderpage-add-content-button {
     max-width: 40%;
     position: relative;
+  }
+}
+
+@media (min-width: 1200px) {
+  .builderpage-content-container {
+    display: flex;
+    background-color: #fafafa;
+    gap: 24px;
+  }
+
+  .builderpage-preview-container {
+    display: block;
+    background-color: #fff;
+    width: 50%;
+    height: 100vh;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .builderpage-preview-phone-container {
+    height: 100%;
+    width: 100%;
+    background: url("../svg/phone.svg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .builderpage-preview-phone-blocks-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    justify-content: center;
+    width: 237px;
+    padding-top: 56px;
+    box-sizing: border-box;
+
+
+  }
+
+  .block {
+    border-radius: 8px;
+    background: #eee;
+    width: 90%;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    padding: 11px 16px;
+    gap: 8px;
+
+  }
+
+  .block p {
+    color: #FFF;
+    width: 80%;
+  }
+
+
+  .github {
+    background: #1A1A1A;
+
+  }
+
+  .builderpage-builder-container {
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 12px;
   }
 }

@@ -150,9 +150,10 @@ function BuilderPage() {
 
   useEffect(() => {
     if (token) {
-      setIsLoading(true); //To start the loading screen 
+      setIsLoading(true); //To start the loading screen
       axios
-        .get(`${import.meta.env.VITE_BASE_URL}/auth/users/${userId}`, { //To get the current content a the user and to fill the builder
+        .get(`${import.meta.env.VITE_BASE_URL}/auth/users/${userId}`, {
+          //To get the current content a the user and to fill the builder
           headers: {
             Authorization: `Bearer ${token}`,
             "Cache-Control": "no-cache",
@@ -168,7 +169,7 @@ function BuilderPage() {
           );
         })
         .finally(() => {
-          setIsLoading(false); //To stop the loading screen  
+          setIsLoading(false); //To stop the loading screen
         });
     } else {
       console.error("No token found");
@@ -180,148 +181,178 @@ function BuilderPage() {
     <div className="builderpage-container">
       <Navbar />
       <div className="builderpage-content-container">
-        <div className="builderpage-content-header-container">
-          <h2>Customize your content</h2>
-          <p>
-            Add/edit/remove content below and then share all of them with the
-            world!
-          </p>
-          <button
-            className="builderpage-add-content-button secondary-button"
-            onClick={handleAddNewLink}
-          >
-            + Add new link
-          </button>
-        </div>
-        <div className="builderpage-content-builder-container">
-          {isLoading ? (
-            <div className="builderpage-content-get-started-container">
-              <p>Loading...</p>
-            </div>
-          ) : isEmpty() ? (
-            <div className="builderpage-content-get-started-container">
-              <img src="./svg/get-started.svg" alt="get started" />
-              <h2>Let’s get you started</h2>
-              <p>
-                Use the “Add new link” button to get started. Once you have more
-                than one link, you can reorder and edit them. We’re here to help
-                you share your profiles with everyone!
-              </p>
-            </div>
-          ) : (
-            content.map((item, index) =>
-              item.state !== "deleted" ? (
-                <div
-                  className="builderpage-content-block-container"
-                  key={index}
-                >
-                  <div className="builderpage-content-block-header">
-                    <p className="builderpage-content-block-label">
-                      <b>Link #{index + 1}</b>
-                    </p>
-                    <p
-                      className="builderpage-content-block-remove"
-                      onClick={() => handleRemoveLink(item._id)}
+        <div className="builderpage-preview-container">
+          <div className="builderpage-preview-phone-container">
+            <div className="builderpage-preview-phone-blocks-container">
+              {content.map((item) =>
+                item.state !== "deleted" ? (
+                  <div className={`block ${item.platform}`}>
+                    <img src={`./svg/${item.platform}-white-logo.svg`} alt="logo" />
+                    <p>{item.title}</p>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="12"
+                      height="12"
+                      viewBox="0 0 12 12"
+                      fill="none"
                     >
-                      Remove
-                    </p>
+                      <path
+                        d="M0.666626 5.3333V6.66664H8.66663L4.99996 10.3333L5.94663 11.28L11.2266 5.99997L5.94663 0.719971L4.99996 1.66664L8.66663 5.3333H0.666626Z"
+                        fill="white"
+                      />
+                    </svg>
                   </div>
-                  <div className="builderpage-content-block-content">
-                    <div className="builderpage-content-select-container">
-                      <label>Platform</label>
-                      <div className="builderpage-content-select-container-image">
-                        {item.platform ? (
-                          <img
-                            src={`/svg/${item.platform}-grey-logo.svg`}
-                            alt="logo-platform"
-                            className="builderpage-content-select-container-logo"
-                          />
-                        ) : (
-                          ""
-                        )}
-                        <select
-                          className="builderpage-select"
-                          onChange={(e) => handleDropdownChange(e, index)}
-                          name="platform"
-                          value={item.platform}
-                        >
-                          <option value="github">Github</option>
-                          <option value="youtube">Youtube</option>
-                          <option value="linkedin">Linkedin</option>
-                          <option value="facebook">Facebook</option>
-                          <option value="twitch">Twitch</option>
-                        </select>
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="14"
-                          height="9"
-                          viewBox="0 0 14 9"
-                          fill="none"
-                          className="builderpage-content-block-arrow"
-                        >
-                          <path
-                            d="M1 1L7 7L13 1"
-                            stroke="#633CFF"
-                            strokeWidth="2"
-                          />
-                        </svg>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="builderpage-input-container">
-                    <div className="builderpage-input-container-content">
-                      <label>Title*</label>
-                      <div className="builderpage-input-container-image">
-                        <input
-                          type="url"
-                          placeholder="Github"
-                          name="url"
-                          className="builderpage-input input-title"
-                          value={item.title}
-                          onChange={(e) => handleLinkTitle(e, index)}
-                          required
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="builderpage-input-container">
-                    <div className="builderpage-input-container-content">
-                      <label>Link*</label>
-                      <div className="builderpage-input-container-image">
-                        <img
-                          className="builderpage-link-svg"
-                          src="/svg/link-grey-logo.svg"
-                          alt="link-icon"
-                        />
-                        <input
-                          type="url"
-                          placeholder="https://github.com/Idiru"
-                          name="url"
-                          className="builderpage-input"
-                          value={item.url}
-                          onChange={(e) => handleLinkChange(e, index)}
-                          required
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                ""
-              )
-            )
-          )}
+                ) : (
+                  ""
+                )
+              )}
+            </div>
+          </div>
         </div>
-        <div className="builderpage-action-container">
-          <button
-            className="secondary-button"
-            onClick={() => navigate(`${userId}/preview`)}
-          >
-            Preview
-          </button>
-          <button className="primary-button" onClick={handleSave}>
-            Save
-          </button>
+        <div className="builderpage-builder-container">
+          <div className="builderpage-content-header-container">
+            <h2>Customize your content</h2>
+            <p>
+              Add/edit/remove content below and then share all of them with the
+              world!
+            </p>
+            <button
+              className="builderpage-add-content-button secondary-button"
+              onClick={handleAddNewLink}
+            >
+              + Add new link
+            </button>
+          </div>
+          <div className="builderpage-content-builder-container">
+            {isLoading ? (
+              <div className="builderpage-content-get-started-container">
+                <p>Loading...</p>
+              </div>
+            ) : isEmpty() ? (
+              <div className="builderpage-content-get-started-container">
+                <img src="./svg/get-started.svg" alt="get started" />
+                <h2>Let’s get you started</h2>
+                <p>
+                  Use the “Add new link” button to get started. Once you have
+                  more than one link, you can reorder and edit them. We’re here
+                  to help you share your profiles with everyone!
+                </p>
+              </div>
+            ) : (
+              content.map((item, index) =>
+                item.state !== "deleted" ? (
+                  <div
+                    className="builderpage-content-block-container"
+                    key={index}
+                  >
+                    <div className="builderpage-content-block-header">
+                      <p className="builderpage-content-block-label">
+                        <b>Link #{index + 1}</b>
+                      </p>
+                      <p
+                        className="builderpage-content-block-remove"
+                        onClick={() => handleRemoveLink(item._id)}
+                      >
+                        Remove
+                      </p>
+                    </div>
+                    <div className="builderpage-content-block-content">
+                      <div className="builderpage-content-select-container">
+                        <label>Platform</label>
+                        <div className="builderpage-content-select-container-image">
+                          {item.platform ? (
+                            <img
+                              src={`/svg/${item.platform}-grey-logo.svg`}
+                              alt="logo-platform"
+                              className="builderpage-content-select-container-logo"
+                            />
+                          ) : (
+                            ""
+                          )}
+                          <select
+                            className="builderpage-select"
+                            onChange={(e) => handleDropdownChange(e, index)}
+                            name="platform"
+                            value={item.platform}
+                          >
+                            <option value="github">Github</option>
+                            <option value="youtube">Youtube</option>
+                            <option value="linkedin">Linkedin</option>
+                            <option value="facebook">Facebook</option>
+                            <option value="twitch">Twitch</option>
+                          </select>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="14"
+                            height="9"
+                            viewBox="0 0 14 9"
+                            fill="none"
+                            className="builderpage-content-block-arrow"
+                          >
+                            <path
+                              d="M1 1L7 7L13 1"
+                              stroke="#633CFF"
+                              strokeWidth="2"
+                            />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="builderpage-input-container">
+                      <div className="builderpage-input-container-content">
+                        <label>Title*</label>
+                        <div className="builderpage-input-container-image">
+                          <input
+                            type="url"
+                            placeholder="Github"
+                            name="url"
+                            className="builderpage-input input-title"
+                            value={item.title}
+                            onChange={(e) => handleLinkTitle(e, index)}
+                            required
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="builderpage-input-container">
+                      <div className="builderpage-input-container-content">
+                        <label>Link*</label>
+                        <div className="builderpage-input-container-image">
+                          <img
+                            className="builderpage-link-svg"
+                            src="/svg/link-grey-logo.svg"
+                            alt="link-icon"
+                          />
+                          <input
+                            type="url"
+                            placeholder="https://github.com/Idiru"
+                            name="url"
+                            className="builderpage-input"
+                            value={item.url}
+                            onChange={(e) => handleLinkChange(e, index)}
+                            required
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  ""
+                )
+              )
+            )}
+          </div>
+          <div className="builderpage-action-container">
+            <button
+              className="secondary-button"
+              onClick={() => navigate(`${userId}/preview`)}
+            >
+              Preview
+            </button>
+            <button className="primary-button" onClick={handleSave}>
+              Save
+            </button>
+          </div>
         </div>
       </div>
     </div>
