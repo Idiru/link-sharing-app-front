@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 
 function SignupValidationPage() {
   const { width, height } = useWindowSize();
+
+  //To redirect the user to the login page
   const navigate = useNavigate();
 
 
@@ -15,7 +17,7 @@ function SignupValidationPage() {
         width={width}
         height={height}
         recycle={false}
-        numberOfPieces={3000}
+        numberOfPieces={3000} 
       />
       <div className="signup-logo-container validation-page-logo-container">
         <svg

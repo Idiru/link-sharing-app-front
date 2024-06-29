@@ -16,7 +16,17 @@ Here is the enpoint used:
 
 ## SignupValidationPage component
 ### Overview
+The SignupPageValidation page is just here for UX. It allows the user to know that his account creation worked 
 
+### Core functionalities
+- <u>**Confetti:**</u> Tons of conffeti are falling to celebrate properly this account creation.
+
+2 parameters are handling this effect: 
+- `recycle={false}`: Avoid to repeat indefinitely the effect. They fall only once. 
+- `numberOfPieces={3000}`: Define the number of confetti. It can impact the performances. 
+
+Here is the enpoint used: 
+- To add a new user: `/auth/signup`
 ## LoginPage component
 ### Overview
 The LoginPage component enables users to log into their accounts by entering their credentials. It features a form for email and password input, handles user authentication via an API, and manages navigation based on the authentication state. 
