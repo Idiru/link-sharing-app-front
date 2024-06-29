@@ -6,11 +6,14 @@ import { jwtDecode } from "jwt-decode";
 import { v4 as uuidv4 } from "uuid";
 import { useNavigate } from "react-router-dom";
 
-
 function BuilderPage() {
-  const [selectedPlatform, setSelectedPlatform] = useState("github");
+  const [isLoading, setIsLoading] = useState(false);
   const [content, setContent] = useState([]);
   const token = localStorage.getItem("authToken");
+  const isEmpty = () => {
+    const deletedList = content.filter((item) => item.state == "deleted");
+    return content.length == deletedList.length ? true : false
+  }
 
   const decodedToken = jwtDecode(token);
   const userId = decodedToken._id;
@@ -18,7 +21,6 @@ function BuilderPage() {
   console.log("userId:", userId);
 
   const navigate = useNavigate();
-
 
   const handleAddNewLink = () => {
     const newId = uuidv4();
@@ -37,19 +39,23 @@ function BuilderPage() {
   const handleDropdownChange = (e, index) => {
     const newContent = content.map((item, idx) => {
       if (idx === index) {
-        return { ...item, platform: e.target.value, state: "updated" };
+        const newState = item.state !== "new" ? "updated" : "new";
+        return { ...item, platform: e.target.value, state: newState };
       }
       return item;
     });
     setContent(newContent);
   };
 
-  const handleRemoveLink = (_id) => {
+  let handleRemoveLink = (_id) => {
     // Create a new array where the item with the matching _id is marked as "deleted"
-    const newContent = content.map((item) =>
-      item._id === _id ? { ...item, state: "deleted" } : item
-    );
-
+    const newContent = content.map((item) => {
+      if (item._id === _id) {
+        console.log(`Marking item as deleted: ${_id}`);
+        return { ...item, state: "deleted" };
+      }
+      return item;
+    });
     // Update the state with the new array
     setContent(newContent);
     console.log("Deleted state added for _id:", _id, content);
@@ -59,9 +65,9 @@ function BuilderPage() {
     const newContent = content.map((item, idx) => {
       if (idx === index) {
         const newState = item.state !== "new" ? "updated" : "new";
-        return { ...item, url: e.target.value, state: newState};
+        return { ...item, url: e.target.value, state: newState };
       }
-      console.log("Content updated:",content)
+      console.log("Content updated:", content);
       return item;
     });
     setContent(newContent);
@@ -111,23 +117,25 @@ function BuilderPage() {
             }
           )
         ),
-        ...toDelete.map((item) =>
+        ...toDelete.map((item) => {
+          console.log("deleted items:", toDelete);
           axios.delete(`${import.meta.env.VITE_BASE_URL}/content/${item._id}`, {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("authToken")}`,
             },
-          })
-        ),
+          });
+        }),
       ]);
 
       //Remove deleted items from the state
       setContent((prev) =>
         prev
           .filter((item) => item.state !== "deleted")
-          .map((item) => ({ ...item, state: undefined }))
+          .map((item) => ({ ...item }))
       );
 
       console.log("All changes saved successfully.");
+      window.location.reload();
     } catch (error) {
       console.error("Error saving changes:", error);
     }
@@ -135,36 +143,28 @@ function BuilderPage() {
 
   useEffect(() => {
     if (token) {
-      try {
-        axios
-          .get(`${import.meta.env.VITE_BASE_URL}/auth/users/${userId}`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Cache-Control": "no-cache",
-            },
-          })
-          .then((res) => {
-            console.log(res.data.user.content);
-            if (res.data.user.content) {
-              setContent(res.data.user.content);
-            } else {
-              console.error("No content found in response");
-              setContent([]);
-            }
-          })
-          .catch((error) => {
-            const errorDescription = error.response
-              ? error.response.data.message
-              : "Network Error";
-            console.error("Error fetching user:", errorDescription);
-          });
-      } catch (error) {
-        console.error("Error decoding token:", error);
-      }
+      setIsLoading(true);
+      axios.get(`${import.meta.env.VITE_BASE_URL}/auth/users/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Cache-Control": "no-cache",
+        },
+      })
+      .then((res) => {
+        console.log(res.data.user.content);
+        setContent(res.data.user.content || []);
+      })
+      .catch((error) => {
+        console.error("Error fetching user:", error.response ? error.response.data.message : "Network Error");
+      })
+      .finally(() => {
+        setIsLoading(false); 
+      });
     } else {
       console.error("No token found");
+      setIsLoading(false);
     }
-  }, []);
+  }, [token, userId]); 
 
   return (
     <div className="builderpage-container">
@@ -184,8 +184,24 @@ function BuilderPage() {
           </button>
         </div>
         <div className="builderpage-content-builder-container">
-          {!content ? (
-            <div>Loading</div>
+          {
+            isLoading ? (
+              <div className="builderpage-content-get-started-container">
+              <p>
+               Loading...
+              </p>
+            </div>
+            ) : (
+              isEmpty() ? (
+            <div className="builderpage-content-get-started-container">
+              <img src="./svg/get-started.svg" alt="get started" />
+              <h2>Let’s get you started</h2>
+              <p>
+                Use the “Add new link” button to get started. Once you have more
+                than one link, you can reorder and edit them. We’re here to help
+                you share your profiles with everyone!
+              </p>
+            </div>
           ) : (
             content.map((item, index) =>
               item.state !== "deleted" ? (
@@ -252,7 +268,7 @@ function BuilderPage() {
                       <div className="builderpage-input-container-image">
                         <input
                           type="url"
-                          placeholder="https://github.com/Idiru"
+                          placeholder="Github"
                           name="url"
                           className="builderpage-input input-title"
                           value={item.title}
@@ -288,10 +304,16 @@ function BuilderPage() {
                 ""
               )
             )
-          )}
+          ))
+          }
         </div>
         <div className="builderpage-action-container">
-          <button className="secondary-button" onClick={() => navigate(`${userId}/preview`)}>Preview</button>
+          <button
+            className="secondary-button"
+            onClick={() => navigate(`${userId}/preview`)}
+          >
+            Preview
+          </button>
           <button className="primary-button" onClick={handleSave}>
             Save
           </button>
