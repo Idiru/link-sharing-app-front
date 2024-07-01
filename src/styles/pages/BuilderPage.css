@@ -177,14 +177,15 @@
   }
 
   .builderpage-preview-phone-container {
-    height: 100%;
-    width: 100%;
+    height: 786px;
+    width: 82%;
     background: url("../svg/phone.svg");
     background-repeat: no-repeat;
-    background-size: cover;
+    background-size: fit;
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
   }
 
   .builderpage-preview-phone-blocks-container {
@@ -195,36 +196,64 @@
     width: 237px;
     padding-top: 56px;
     box-sizing: border-box;
-
-
+    max-height: 300px;
+    padding: 10px;
+    padding-top: 20px;
+    overflow: auto;
+    position: absolute;
+    top: 45%;
+    bottom: auto;
   }
 
   .block {
     border-radius: 8px;
     background: #eee;
     width: 90%;
-    height: 30px;
+    min-height: 30px;
     display: flex;
     align-items: center;
     padding: 11px 16px;
     gap: 8px;
-
   }
 
   .block p {
-    color: #FFF;
+    color: #fff;
     width: 80%;
   }
 
-
   .github {
-    background: #1A1A1A;
+    background: #1a1a1a;
+  }
 
+  .youtube {
+    background: #ff3939;
+  }
+
+  .linkedin {
+    background: #2d68ff;
+  }
+
+  .facebook {
+    background: #2442ac;
+  }
+
+  .twitch {
+    background: #ee3fc8;
+  }
+
+  .twitter {
+    background: #43B7E9;
+  }
+
+  .builderpage-content-builder-container {
+    max-height: 450px;
+    overflow: auto;
   }
 
   .builderpage-builder-container {
     background-color: #fff;
     padding: 40px;
     border-radius: 12px;
+    max-height: 786px;
   }
 }

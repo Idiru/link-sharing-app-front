@@ -5,10 +5,13 @@ import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { v4 as uuidv4 } from "uuid";
 import { useNavigate } from "react-router-dom";
+import Snackbar from "@mui/material/Snackbar";
 
 function BuilderPage() {
   const [isLoading, setIsLoading] = useState(false); //Display the loading screen waiting for the data
   const [content, setContent] = useState([]); //Main variable to store the whole content from the user
+  const [succesMessage, setsuccesMessage] = useState(undefined);
+  const [open, setOpen] = useState(false); //To handle the display of the error message toast
   const token = localStorage.getItem("authToken");
   const isEmpty = () => {
     //Check if the list is empty
@@ -22,6 +25,15 @@ function BuilderPage() {
 
   //To navigate
   const navigate = useNavigate();
+
+  //To open/close the error message when the user click away
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+  };
 
   //Function to add a new link inside the builder
   const handleAddNewLink = () => {
@@ -142,7 +154,11 @@ function BuilderPage() {
       );
 
       console.log("All changes saved successfully.");
-      window.location.reload();
+      setsuccesMessage("All changes saved successfully.");
+      setOpen(true);
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
     } catch (error) {
       console.error("Error saving changes:", error);
     }
@@ -187,7 +203,10 @@ function BuilderPage() {
               {content.map((item) =>
                 item.state !== "deleted" ? (
                   <div className={`block ${item.platform}`}>
-                    <img src={`./svg/${item.platform}-white-logo.svg`} alt="logo" />
+                    <img
+                      src={`./svg/${item.platform}-white-logo.svg`}
+                      alt="logo"
+                    />
                     <p>{item.title}</p>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -355,6 +374,16 @@ function BuilderPage() {
           </div>
         </div>
       </div>
+      <Snackbar
+        sx={{
+          ".css-1eqdgzv-MuiPaper-root-MuiSnackbarContent-root": {
+          },
+        }}
+        open={open}
+        autoHideDuration={5000}
+        onClose={handleClose}
+        message={succesMessage}
+      />
     </div>
   );
 }
