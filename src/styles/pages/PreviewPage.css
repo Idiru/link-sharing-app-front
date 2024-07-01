@@ -42,7 +42,6 @@
   padding: 11px 27px;
   flex-direction: column;
   align-items: flex-start;
-  gap: 8px;
   border-radius: 8px;
   border: 1px solid var(--Purple, #633cff);
 }
@@ -193,4 +192,50 @@
 .copy-input span i {
   color: white;
   font-size: 20px;
+}
+@media (max-width: 575.98px) {
+  .btn-container {
+    margin: 16px 16px 16px 16px;
+    padding: 16px 16px 16px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    align-self: stretch;
+    border-radius: 12px;
+    background: var(--White, #fff);
+  }
+  .share-btn {
+    display: flex;
+    padding: 11px 27px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    border-radius: 8px;
+    background: var(--Purple, #633cff);
+  }
+  .share-btn p {
+    color: var(--White, #fff);
+
+    font-family: "Instrument Sans";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 150%;
+  }
+  .back-btn {
+    display: flex;
+    padding: 11px 27px;
+    flex-direction: column;
+    align-items: flex-start;
+    border-radius: 8px;
+    border: 1px solid var(--Purple, #633cff);
+  }
+  .back-btn p {
+    color: var(--Purple, #633cff);
+    font-family: "Instrument Sans";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 150%;
+  }
 }

@@ -119,7 +119,7 @@ function PreviewPage() {
                         <p>Back To Editor</p>
                     </button>
                     <button className='share-btn' onClick={handleShareLink}>
-                        <p>Share Link</p>
+                        <p>Publish</p>
                     </button>
                 </div>
             </div>
