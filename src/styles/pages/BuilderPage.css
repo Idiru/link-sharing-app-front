@@ -170,7 +170,7 @@
   .builderpage-preview-container {
     display: block;
     background-color: #fff;
-    width: 40%;
+    width: 48%;
     height: 100vh;
     border-radius: 12px;
     display: flex;
@@ -260,6 +260,6 @@
     padding: 40px;
     border-radius: 12px;
     max-height: 786px;
-    width: 50%;
+    width: 60%;
   }
 }

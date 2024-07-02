@@ -134,6 +134,11 @@ button {
 .primary-button a:hover {
   color: #fff;
 }
+
+.error-message {
+background-color: #FF3939 !important;
+}
+
 @media (min-width: 768px) {
   body {
     background-color: #fafafa;

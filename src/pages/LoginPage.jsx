@@ -209,6 +209,7 @@ useEffect(() => {
         autoHideDuration={5000}
         onClose={handleClose}
         message={errorMessage}
+        className="error-message"
       />
     </div>
   );
