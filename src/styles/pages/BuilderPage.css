@@ -170,7 +170,7 @@
   .builderpage-preview-container {
     display: block;
     background-color: #fff;
-    width: 50%;
+    width: 40%;
     height: 100vh;
     border-radius: 12px;
     display: flex;
@@ -180,7 +180,7 @@
 
   .builderpage-preview-phone-container {
     height: 786px;
-    width: 87%;
+    width: 100%;
     background: url("../svg/phone.svg");
     background-repeat: no-repeat;
     background-size: fit;
@@ -188,7 +188,7 @@
     align-items: center;
     justify-content: center;
     position: relative;
-    overflow: visible;
+    overflow-y: visible;
   }
 
   .builderpage-preview-phone-blocks-container {
@@ -204,6 +204,8 @@
     position: absolute;
     top: 45%;
     transition: padding-top 0.3s ease-out;
+    overflow-x: hidden; 
+    padding-right: 25px;
   }
 
   .block {
