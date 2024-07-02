@@ -1,36 +1,11 @@
-import '../styles/pages/UpdateUserPage.css';
-import { useNavigate } from 'react-router-dom';
-import { useReducer, useEffect, useState, useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useReducer, useEffect, useState, useRef } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
+import '../styles/pages/UpdateUserPage.css';
 
 function UpdateUserPage() {
-
     const navigate = useNavigate();
     const { id } = useParams();
-
-    const fetchUserData = async () => {
-        try {
-            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/users/${id}`, {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-                }
-            });
-
-            if (response.ok) {
-                const result = await response.json();
-                const { email, firstName, lastName, userName } = result.user;
-                return { email, firstName, lastName, userName, currentPassword: '', newPassword: '', repeatedPassword: '', profileImage: result.user.profileImage };
-            } else {
-                console.error('Failed to fetch user data');
-                return initState;
-            }
-        } catch (error) {
-            console.error('Error fetching user data:', error);
-            return initState;
-        }
-    };
 
     const initState = {
         userName: '',
@@ -53,16 +28,35 @@ function UpdateUserPage() {
 
     const [state, dispatch] = useReducer(reducer, initState);
     const [loading, setLoading] = useState(true);
-    const [file, setFile] = useState(null);
-    const [filename, setFilename] = useState('Choose File');
-    const [profileImageUrl, setProfileImageUrl] = useState(null);
     const fileInputRef = useRef(null);
+
+    const fetchUserData = async () => {
+        try {
+            const response = await fetch(`http://localhost:5005/auth/users/${id}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+                }
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                const { email, firstName, lastName, userName } = result.user;
+                return { email, firstName, lastName, userName, currentPassword: '', newPassword: '', repeatedPassword: '', profileImage: result.user.profileImage };
+            } else {
+                console.error('Failed to fetch user data');
+                return initState;
+            }
+        } catch (error) {
+            console.error('Error fetching user data:', error);
+            return initState;
+        }
+    };
 
     useEffect(() => {
         const initializeUserData = async () => {
             const userData = await fetchUserData();
             dispatch({ type: 'setUserData', payload: userData });
-            setProfileImageUrl(userData.profileImage); // Set profile image URL if it exists
             setLoading(false);
         };
         initializeUserData();
@@ -76,23 +70,11 @@ function UpdateUserPage() {
         });
     };
 
-    const handleFileChange = (e) => {
-        setFile(e.target.files[0]);
-        setFilename(e.target.files[0].name);
-
-        // Read selected file and set profile image URL for preview
-        const reader = new FileReader();
-        reader.onload = () => {
-            setProfileImageUrl(reader.result);
-        };
-        reader.readAsDataURL(e.target.files[0]);
-    };
-
     const handleClickUpload = () => {
         fileInputRef.current.click();
     };
 
-    const saveData = async (e) => {
+    const saveData = async () => {
         const { email, firstName, lastName, userName, currentPassword, newPassword, repeatedPassword } = state;
 
         if (newPassword !== repeatedPassword) {
@@ -100,31 +82,30 @@ function UpdateUserPage() {
             return;
         }
 
-        const data = new FormData();
-        data.append('profileImage', file);
-        data.append('email', email);
-        data.append('firstName', firstName);
-        data.append('lastName', lastName);
-        data.append('userName', userName);
-        data.append('currentPassword', currentPassword);
-        data.append('newPassword', newPassword);
+        const data = {
+            email,
+            firstName,
+            lastName,
+            userName,
+            currentPassword,
+            newPassword,
+            profileImage: state.profileImage // Ensure to properly handle profile image data
+        };
 
         try {
-            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/update/${id}`, {
+            const response = await fetch(`http://localhost:5005/auth/update/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+                    'Content-Type': 'application/json'
                 },
-                body: data
+                body: JSON.stringify(data)
             });
 
             if (response.ok) {
                 const result = await response.json();
                 console.log("User updated successfully:", result);
-                if (result.user.profileImage) {
-                    setProfileImageUrl(result.user.profileImage);
-                }
-                window.location.reload();
+                window.location.reload(); // Consider better ways to handle state update after successful update
             } else {
                 const errorData = await response.json();
                 console.error("Failed to update user:", errorData.message);
@@ -136,9 +117,14 @@ function UpdateUserPage() {
         }
     };
 
-    const cancelChanges = (e) => {
-        navigate("/")
+    const cancelChanges = () => {
+        navigate("/");
     };
+
+    // Check if data is still loading
+    if (loading) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <>
@@ -150,15 +136,10 @@ function UpdateUserPage() {
                     <div className="pic-container-right">
                         <section onClick={handleClickUpload}>
                             <div>
-                                {profileImageUrl ? (
-                                    <img src={profileImageUrl} alt="Profile" />
-                                ) : (
-                                    <img src="../src/assets/Images/ph_image.svg" alt="Placeholder" />
-                                )}
+                                {/* Content for uploading image */}
                             </div>
                             <h5>Upload image</h5>
                         </section>
-                        <input type="file" ref={fileInputRef} style={{ display: 'none' }} onChange={handleFileChange} />
                         <label><p>Image must be below 1024x1024px. Use PNG or JPG format.</p></label>
                     </div>
                 </div>
@@ -168,7 +149,7 @@ function UpdateUserPage() {
                         <input
                             placeholder="e.g.amazing_john"
                             name="userName"
-                            value={state.userName}
+                            value={state.userName || ''} // Ensure value is not undefined
                             onChange={handleChange}
                         ></input>
                     </div>
@@ -177,7 +158,7 @@ function UpdateUserPage() {
                         <input
                             placeholder="e.g.john"
                             name="firstName"
-                            value={state.firstName}
+                            value={state.firstName || ''}
                             onChange={handleChange}
                         ></input>
                     </div>
@@ -186,7 +167,7 @@ function UpdateUserPage() {
                         <input
                             placeholder="e.g. Appleseed"
                             name="lastName"
-                            value={state.lastName}
+                            value={state.lastName || ''}
                             onChange={handleChange}
                         ></input>
                     </div>
@@ -195,7 +176,7 @@ function UpdateUserPage() {
                         <input
                             placeholder="e.g. email@example.com"
                             name="email"
-                            value={state.email}
+                            value={state.email || ''}
                             onChange={handleChange}
                         ></input>
                     </div>
@@ -206,7 +187,7 @@ function UpdateUserPage() {
                         <input
                             name="currentPassword"
                             type="password"
-                            value={state.currentPassword}
+                            value={state.currentPassword || ''}
                             onChange={handleChange}
                             autoComplete="off"
                         ></input>
@@ -216,7 +197,7 @@ function UpdateUserPage() {
                         <input
                             name="newPassword"
                             type="password"
-                            value={state.newPassword}
+                            value={state.newPassword || ''}
                             onChange={handleChange}
                             autoComplete="off"
                         ></input>
@@ -226,7 +207,7 @@ function UpdateUserPage() {
                         <input
                             name="repeatedPassword"
                             type="password"
-                            value={state.repeatedPassword}
+                            value={state.repeatedPassword || ''}
                             onChange={handleChange}
                             autoComplete="off"
                         ></input>
