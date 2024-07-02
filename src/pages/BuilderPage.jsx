@@ -26,7 +26,7 @@ function BuilderPage() {
   //To navigate
   const navigate = useNavigate();
 
-  //To open/close the error message when the user click away
+  //To open/close the message when the user click away
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;

@@ -4,6 +4,8 @@ import '../styles/pages/PreviewPage.css';
 import 'remixicon/fonts/remixicon.css';
 import Modal from 'react-modal';
 import { Link } from 'react-router-dom';
+import Snackbar from "@mui/material/Snackbar";
+
 
 Modal.setAppElement('#root');
 
@@ -29,6 +31,20 @@ function PreviewPage() {
     const [userContent, setUserContent] = useState([]);
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [shareLink, setShareLink] = useState('');
+    const [succesMessage, setsuccesMessage] = useState(undefined);
+    const [open, setOpen] = useState(false); //To handle the display of the error message toast
+
+
+
+  //To open/close the message when the user click away
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+  };
+
     const fetchUserData = async () => {
         try {
             const response = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/users/${id}`, {
@@ -95,6 +111,8 @@ function PreviewPage() {
                 console.log('Content published successfully');
                 setShareLink(`${import.meta.env.VITE_BASE_URL_FRONT}/devlinks/${userData.userName}`);
                 setModalIsOpen(true);
+                setsuccesMessage("All changes published successfully.");
+                setOpen(true);
             } else {
                 console.error('Failed to publish content');
             }
@@ -116,7 +134,7 @@ function PreviewPage() {
                 <div className='btn-container'>
                     <button className='back-btn' onClick={() => navigate(`/`)}>
                         <Link to={`${import.meta.env.VITE_BASE_URL}/`} />
-                        <p>Back To Editor</p>
+                        <p>Back to editor</p>
                     </button>
                     <button className='share-btn' onClick={handleShareLink}>
                         <p>Publish</p>
@@ -153,6 +171,16 @@ function PreviewPage() {
                     </div>
                 </div>
             </div>
+            <Snackbar
+        sx={{
+          ".css-1eqdgzv-MuiPaper-root-MuiSnackbarContent-root": {
+          },
+        }}
+        open={open}
+        autoHideDuration={5000}
+        onClose={handleClose}
+        message={succesMessage}
+      />
             <Modal
                 isOpen={modalIsOpen}
                 onRequestClose={() => setModalIsOpen(false)}

@@ -210,9 +210,9 @@ export default function MenuAppBar() {
               >
                 <p
                   className="navbar-menu-list navbar-logout"
-                  onClick={() => navigate(`/update/${userId}`)}
+                  onClick={() => navigate(`/profile/${userId}`)}
                 >
-                  Profil
+                  Profile
                 </p>
               </MenuItem>
               <MenuItem

@@ -139,6 +139,10 @@ button {
 background-color: #FF3939 !important;
 }
 
+.css-6hp17o-MuiList-root-MuiMenu-list {
+  padding: 11px 27px !important;
+}
+
 @media (min-width: 768px) {
   body {
     background-color: #fafafa;
