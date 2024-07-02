@@ -126,6 +126,37 @@ function UpdateUserPage() {
         return <div>Loading...</div>;
     }
 
+    // image uploading  
+    const handleFileUpload = async (e) => {
+        const file = e.target.files[0];
+        const formData = new FormData();
+        formData.append('profileImage', file);
+
+        try {
+            const response = await fetch('http://localhost:5005/user/upload', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+                },
+                body: formData,
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                dispatch({ type: 'input', field: 'profileImage', value: result.profileImage });
+                console.log(result.profileImage)
+            } else {
+                const errorData = await response.json();
+                console.error('Failed to upload image:', errorData.message);
+                alert('Failed to upload image');
+            }
+        } catch (error) {
+            console.error('Error uploading image:', error);
+            alert('Error uploading image');
+        }
+    };
+
+
     return (
         <>
             <Navbar />
@@ -135,10 +166,14 @@ function UpdateUserPage() {
                     <p className="profile-pic-text">Profile picture</p>
                     <div className="pic-container-right">
                         <section onClick={handleClickUpload}>
-                            <div>
-                                {/* Content for uploading image */}
-                            </div>
+                            <img src={state.profileImage} alt="Profile" className="profile-image" />
                             <h5>Upload image</h5>
+                            <input
+                                type="file"
+                                ref={fileInputRef}
+                                style={{ display: 'none' }}
+                                onChange={handleFileUpload}
+                            />
                         </section>
                         <label><p>Image must be below 1024x1024px. Use PNG or JPG format.</p></label>
                     </div>
