@@ -10,6 +10,10 @@
   border-radius: 12px;
 }
 
+.builderpage-preview-container {
+  display: none;
+}
+
 .builderpage-content-header-container h2 {
   font-size: 24px;
 }
@@ -35,7 +39,7 @@
 }
 
 .builderpage-content-block-remove {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .builderpage-content-block-header {
@@ -98,8 +102,7 @@
 }
 
 .input-title {
-    padding-left: 20px;
-
+  padding-left: 20px;
 }
 
 .builderpage-input-container-image img {
@@ -134,7 +137,7 @@
 }
 
 .builderpage-content-get-started-container {
-  background-color:#fafafa;
+  background-color: #fafafa;
   height: 100%;
   width: 100%;
   display: flex;
@@ -152,5 +155,111 @@
   .builderpage-add-content-button {
     max-width: 40%;
     position: relative;
+  }
+}
+
+@media (min-width: 1200px) {
+  .builderpage-content-container {
+    display: flex;
+    background-color: #fafafa;
+    gap: 24px;
+    margin: 0;
+    padding-top: 0;
+  }
+
+  .builderpage-preview-container {
+    display: block;
+    background-color: #fff;
+    width: 40%;
+    height: 100vh;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .builderpage-preview-phone-container {
+    height: 786px;
+    width: 100%;
+    background: url("../svg/phone.svg");
+    background-repeat: no-repeat;
+    background-size: fit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow-y: visible;
+  }
+
+  .builderpage-preview-phone-blocks-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    justify-content: center;
+    width: 237px;
+    max-height: 300px !important; 
+    box-sizing: border-box;
+    padding: 10px;
+    overflow-y: auto;
+    position: absolute;
+    top: 45%;
+    transition: padding-top 0.3s ease-out;
+    overflow-x: hidden; 
+    padding-right: 25px;
+  }
+
+  .block {
+    border-radius: 8px;
+    background: #eee;
+    width: 90%;
+    min-height: 30px;
+    display: flex;
+    align-items: center;
+    padding: 11px 16px;
+    gap: 8px;
+    overflow: hidden;
+  }
+
+  .block p {
+    color: #fff;
+    width: 80%;
+  }
+
+  .github {
+    background: #1a1a1a;
+  }
+
+  .youtube {
+    background: #ff3939;
+  }
+
+  .linkedin {
+    background: #2d68ff;
+  }
+
+  .facebook {
+    background: #2442ac;
+  }
+
+  .twitch {
+    background: #ee3fc8;
+  }
+
+  .twitter {
+    background: #43B7E9;
+  }
+
+  .builderpage-content-builder-container {
+    max-height: 450px;
+    overflow: auto;
+    padding-right: 20px;
+  }
+
+  .builderpage-builder-container {
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 12px;
+    max-height: 786px;
+    width: 50%;
   }
 }
