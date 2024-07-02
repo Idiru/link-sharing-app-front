@@ -140,7 +140,7 @@ function PreviewPage() {
                                 const platformData = platforms.find(p => p.platform === content.platform.toLowerCase());
                                 return (
                                     <div onClick={() => handleRedirection(content.url)} key={content._id} className='content-item' style={{ backgroundColor: platformData ? platformData.color : 'grey' }}>
-                                        {platformData && <i className={platformData.icon} />}
+                                        {platformData && <i className={platformData.icon} style={{ color: 'white' }} />}
                                         <h4>{content.title}</h4>
 
                                         <i className="ri-arrow-right-line " style={{ color: 'white' }}></i>
