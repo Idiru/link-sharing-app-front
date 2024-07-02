@@ -163,6 +163,8 @@
     display: flex;
     background-color: #fafafa;
     gap: 24px;
+    margin: 0;
+    padding-top: 0;
   }
 
   .builderpage-preview-container {
@@ -178,7 +180,7 @@
 
   .builderpage-preview-phone-container {
     height: 786px;
-    width: 82%;
+    width: 87%;
     background: url("../svg/phone.svg");
     background-repeat: no-repeat;
     background-size: fit;
@@ -186,6 +188,7 @@
     align-items: center;
     justify-content: center;
     position: relative;
+    overflow: visible;
   }
 
   .builderpage-preview-phone-blocks-container {
@@ -194,15 +197,13 @@
     gap: 20px;
     justify-content: center;
     width: 237px;
-    padding-top: 56px;
+    max-height: 300px !important; 
     box-sizing: border-box;
-    max-height: 300px;
     padding: 10px;
-    padding-top: 20px;
-    overflow: auto;
+    overflow-y: auto;
     position: absolute;
     top: 45%;
-    bottom: auto;
+    transition: padding-top 0.3s ease-out;
   }
 
   .block {
@@ -214,6 +215,7 @@
     align-items: center;
     padding: 11px 16px;
     gap: 8px;
+    overflow: hidden;
   }
 
   .block p {
@@ -248,6 +250,7 @@
   .builderpage-content-builder-container {
     max-height: 450px;
     overflow: auto;
+    padding-right: 20px;
   }
 
   .builderpage-builder-container {
@@ -255,5 +258,6 @@
     padding: 40px;
     border-radius: 12px;
     max-height: 786px;
+    width: 50%;
   }
 }

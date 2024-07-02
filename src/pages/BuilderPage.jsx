@@ -158,7 +158,7 @@ function BuilderPage() {
       setOpen(true);
       setTimeout(() => {
         window.location.reload();
-      }, 2000);
+      }, 1000);
     } catch (error) {
       console.error("Error saving changes:", error);
     }
@@ -191,7 +191,21 @@ function BuilderPage() {
       console.error("No token found");
       setIsLoading(false);
     }
+    
   }, [token, userId]);
+
+  useEffect(() => {
+    // Define the padding for the phone preview
+    const nonDeletedBlocks = content.filter(item => item.state !== "deleted");
+    const padding = nonDeletedBlocks.length > 4 ? `${(nonDeletedBlocks.length * 15) * 1.5}px` : "20px";
+
+    const container = document.querySelector(".builderpage-preview-phone-blocks-container");
+    if (container) {
+        container.style.transition = 'padding-top 0.3s ease-out';
+        container.style.paddingTop = padding;
+    }
+  }, [content]);  
+
 
   return (
     <div className="builderpage-container">
