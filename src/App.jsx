@@ -9,6 +9,7 @@ import BuilderPage from './pages/BuilderPage'
 import VisitorsPage from './pages/VisitorsPage'
 import Private from './components/Private'
 import PreviewPage from './pages/PreviewPage'
+import AnalyticsPage from './pages/AnalyticsPage'
 
 function App() {
 
@@ -23,6 +24,7 @@ function App() {
         <Route path='/' element={<Private><BuilderPage /></Private>} />
         <Route path='/devlinks/:userName' element={<VisitorsPage />} />
         <Route path='/:id/preview' element={<PreviewPage />} />
+        <Route path='/performance/:contentId' element={<AnalyticsPage />} />
       </Routes>
     </>
   )

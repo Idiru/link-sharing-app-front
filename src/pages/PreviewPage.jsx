@@ -23,6 +23,7 @@ function PreviewPage() {
 
     ];
     const navigate = useNavigate();
+    const navigateToPerformance = useNavigate()
     const { id } = useParams();
 
     const [userData, setUserData] = useState(null);
@@ -78,7 +79,7 @@ function PreviewPage() {
     }, []);
 
     const handleRedirection = (url) => {
-        window.location.href = url;
+        window.open(url, '_blank');
     };
     const handleShareLink = async () => {
         try {
@@ -101,6 +102,10 @@ function PreviewPage() {
         } catch (error) {
             console.error('Error publishing content:', error);
         }
+    };
+    const handleAnalytics = (contentId) => {
+        const analyticsUrl = `${import.meta.env.VITE_BASE_URL_FRONT}/performance/${contentId}`;
+        window.open(analyticsUrl, '_blank');
     };
     // COPYING THE LICK FROM INPUT FIELD HANDLER 
     const copyToClipboard = () => {
@@ -139,11 +144,13 @@ function PreviewPage() {
                             userContent.map((content) => {
                                 const platformData = platforms.find(p => p.platform === content.platform.toLowerCase());
                                 return (
-                                    <div onClick={() => handleRedirection(content.url)} key={content._id} className='content-item' style={{ backgroundColor: platformData ? platformData.color : 'grey' }}>
+                                    <div className='content-item' style={{ backgroundColor: platformData ? platformData.color : 'grey' }}>
                                         {platformData && <i className={platformData.icon} style={{ color: 'white' }} />}
                                         <h4>{content.title}</h4>
-
-                                        <i className="ri-arrow-right-line " style={{ color: 'white' }}></i>
+                                        <div >
+                                            <i class="ri-bar-chart-2-line" style={{ color: 'white', }} onClick={() => handleAnalytics(content._id)} key={content._id} ></i>
+                                            <i className="ri-arrow-right-line " style={{ color: 'white', paddingLeft: '5px' }} onClick={() => handleRedirection(content.url)} key={content._id}></i>
+                                        </div>
                                     </div>
                                 );
                             })
