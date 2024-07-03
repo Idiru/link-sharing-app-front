@@ -51,9 +51,31 @@ function VisitorsPage() {
     fetchUserData();
   }, []);
 
-  const handleRedirection = (url) => {
-    window.location.href = url;
+  const handleRedirection = async (contentId, url) => {
+    try {
+      // Send POST request to record the click
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/clicks`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+        },
+        body: JSON.stringify({ contentId })
+      });
+
+      if (response.ok) {
+        console.log('Click recorded');
+      } else {
+        console.error('Failed to record click');
+      }
+
+      // Redirect to the URL
+      window.location.href = url;
+    } catch (error) {
+      console.error('Error recording click:', error);
+    }
   };
+
 
   return (
     <div style={{ background: 'var(--Light-Grey, #FAFAFA)' }}>
@@ -77,7 +99,7 @@ function VisitorsPage() {
                 return (
 
                   < div key={content._id}
-                    onClick={() => handleRedirection(content.url)}
+                    onClick={() => handleRedirection(content._id, content.url)}
 
                     className='content-item'
                     style={{ backgroundColor: platformData ? platformData.color : 'grey' }}
