@@ -1,14 +1,19 @@
-body {
-  background-color: white;
+.profil-page-container {
+  background-color: #fafafa;
+  padding: 16px;
 }
+
 .update-info-container {
   display: flex;
-  padding: 40px;
   flex-direction: column;
   align-items: flex-start;
   gap: 40px;
   flex: 1 0 0;
   align-self: stretch;
+  background-color: #fff;
+  padding: 24px;
+  border-radius: 12px;
+
 }
 .profile-details-header {
   color: var(--Dark-Grey, #333);
@@ -19,12 +24,20 @@ body {
 }
 .pic-container {
   display: flex;
-  align-items: center;
   gap: 16px;
   align-self: stretch;
   padding: 8px;
   box-sizing: border-box;
   background: var(--Light-Grey, #fafafa);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.profile-details-description {
+  color: var(--Grey, #737373);
+  font-family: "Instrument Sans";
+  font-size: 16px;
+  padding-top: 8px;
 }
 .profile-pic-text {
   width: 240px;
@@ -36,6 +49,7 @@ body {
   padding: 61px 38px 60px 39px;
   justify-content: center;
   align-items: center;
+  padding: 24px;
 }
 .update-info-container section h5 {
   color: var(--Purple, #633cff);
@@ -69,31 +83,28 @@ body {
   padding: 20px;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
   gap: 12px;
   align-self: stretch;
   border-radius: 12px;
   background: var(--Light-Grey, #fafafa);
 }
-.input-container {
+.profile-page-input-container {
   display: flex;
-  align-items: center;
-  gap: 16px;
+  flex-direction: column;
+  gap: 4px;
   align-self: stretch;
 }
-.input-container label {
-  color: var(--Grey, #737373);
-  width: 240px;
+.profile-page-input-container label {
+  color: var(--Dark-Grey, #333);
   font-family: "Instrument Sans";
-  font-size: 16px;
+  font-size: 12px;
   font-style: normal;
   font-weight: 400;
   line-height: 150%;
 }
-.input-container input {
+.profile-page-input-container input {
   display: flex;
   padding: 12px 16px;
-  align-items: center;
   gap: 12px;
   flex: 1 0 0;
   border-radius: 8px;
@@ -108,40 +119,9 @@ body {
   gap: 8px;
   align-self: stretch;
 }
-.update-btn button {
-  display: flex;
-  padding: 11px 27px;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 8px;
-  border-radius: 8px;
-  background: var(--Purple, #633cff);
-}
-.update-btn p {
-  color: var(--White, #fff);
-  font-family: "Instrument Sans";
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 600;
-  line-height: 150%;
-}
-.update-btn .cancel-btn {
-  display: flex;
-  padding: 11px 27px;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 8px;
-  border-radius: 8px;
-  background: var(--White, #fff);
-}
-.update-btn .cancel-btn p {
-  color: black;
-  font-family: "Instrument Sans";
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 600;
-  line-height: 150%;
-}
+
+
+
 @media only screen and (max-width: 600px) {
   .pic-container {
     display: flex;

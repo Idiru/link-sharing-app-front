@@ -1,4 +1,4 @@
-import "../styles/pages/UpdateUserPage.css";
+import "../styles/pages/ProfilePage.css";
 import { useNavigate } from "react-router-dom";
 import { useReducer, useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
@@ -179,126 +179,135 @@ function ProfilePage() {
   return (
     <>
       <Navbar />
-      <div className="update-info-container">
-        <h1 className="profile-details-header">Profile Details</h1>
-        <div className="pic-container">
-          <p className="profile-pic-text">Profile picture</p>
-          <div className="pic-container-right">
-            <section onClick={handleClickUpload}>
+      <div className="profil-page-container">
+        <div className="update-info-container">
+          <div>
+            <h1 className="profile-details-header">Profile details</h1>
+            <p className="profile-details-description">
+              Add your details to create a personal touch to your profile.
+            </p>
+          </div>
+          <div className="pic-container profile-block">
+            <p className="profile-pic-text">Profile picture</p>
+            <div className="pic-container-right">
+              <section onClick={handleClickUpload}>
+                <div>
+                  {profileImageUrl ? (
+                    <img src={profileImageUrl} alt="Profile" />
+                  ) : (
+                    <img
+                      src="../src/assets/Images/ph_image.svg"
+                      alt="Placeholder"
+                    />
+                  )}
+                </div>
+                <h5>Upload image</h5>
+              </section>
+              <input
+                type="file"
+                ref={fileInputRef}
+                style={{ display: "none" }}
+                onChange={handleFileChange}
+                required
+              />
+              <label>
+                <p>Image must be below 1024x1024px. Use PNG or JPG format.</p>
+              </label>
+            </div>
+          </div>
+          <div className="general-data-container">
+            <div className="profile-page-input-container">
+              <label>User name*</label>
               <div>
-                {profileImageUrl ? (
-                  <img src={profileImageUrl} alt="Profile" />
-                ) : (
-                  <img
-                    src="../src/assets/Images/ph_image.svg"
-                    alt="Placeholder"
-                  />
-                )}
+                <input
+                  placeholder="e.g.amazing_john"
+                  name="userName"
+                  value={state.userName}
+                  onChange={handleChange}
+                ></input>
               </div>
-              <h5>Upload image</h5>
-            </section>
-            <input
-              type="file"
-              ref={fileInputRef}
-              style={{ display: "none" }}
-              onChange={handleFileChange}
-              required
-            />
-            <label>
-              <p>Image must be below 1024x1024px. Use PNG or JPG format.</p>
-            </label>
+            </div>
+            <div className="profile-page-input-container">
+              <label>First name</label>
+              <input
+                placeholder="e.g.john"
+                name="firstName"
+                value={state.firstName}
+                onChange={handleChange}
+              ></input>
+            </div>
+            <div className="profile-page-input-container">
+              <label>Last name</label>
+              <input
+                placeholder="e.g. Appleseed"
+                name="lastName"
+                value={state.lastName}
+                onChange={handleChange}
+              ></input>
+            </div>
+            <div className="profile-page-input-container">
+              <label>Email*</label>
+              <input
+                placeholder="e.g. email@example.com"
+                name="email"
+                value={state.email}
+                onChange={handleChange}
+              ></input>
+            </div>
           </div>
-        </div>
-        <div className="general-data-container">
-          <div className="input-container">
-            <label>User Name*</label>
-            <input
-              placeholder="e.g.amazing_john"
-              name="userName"
-              value={state.userName}
-              onChange={handleChange}
-            ></input>
+          <div className="general-data-container">
+            <div className="profile-page-input-container">
+              <label>Current password</label>
+              <input
+                name="currentPassword"
+                type="password"
+                value={state.currentPassword}
+                onChange={handleChange}
+                autoComplete="off"
+              ></input>
+            </div>
+            <div className="profile-page-input-container">
+              <label>New password</label>
+              <input
+                name="newPassword"
+                type="password"
+                value={state.newPassword}
+                onChange={handleChange}
+                autoComplete="off"
+              ></input>
+            </div>
+            <div className="profile-page-input-container">
+              <label>Confirm new password</label>
+              <input
+                name="repeatedPassword"
+                type="password"
+                value={state.repeatedPassword}
+                onChange={handleChange}
+                autoComplete="off"
+              ></input>
+            </div>
           </div>
-          <div className="input-container">
-            <label>First Name</label>
-            <input
-              placeholder="e.g.john"
-              name="firstName"
-              value={state.firstName}
-              onChange={handleChange}
-            ></input>
+          <div className="update-btn">
+            <button className="primary-button" onClick={saveData}>
+              Save
+            </button>
+            <button className="secondary-button" onClick={cancelChanges}>
+              Cancel
+            </button>
           </div>
-          <div className="input-container">
-            <label>Last Name</label>
-            <input
-              placeholder="e.g. Appleseed"
-              name="lastName"
-              value={state.lastName}
-              onChange={handleChange}
-            ></input>
-          </div>
-          <div className="input-container">
-            <label>Email*</label>
-            <input
-              placeholder="e.g. email@example.com"
-              name="email"
-              value={state.email}
-              onChange={handleChange}
-            ></input>
-          </div>
-        </div>
-        <div className="general-data-container">
-          <div className="input-container">
-            <label>Current Password</label>
-            <input
-              name="currentPassword"
-              type="password"
-              value={state.currentPassword}
-              onChange={handleChange}
-              autoComplete="off"
-            ></input>
-          </div>
-          <div className="input-container">
-            <label>New Password</label>
-            <input
-              name="newPassword"
-              type="password"
-              value={state.newPassword}
-              onChange={handleChange}
-              autoComplete="off"
-            ></input>
-          </div>
-          <div className="input-container">
-            <label>Confirm New Password</label>
-            <input
-              name="repeatedPassword"
-              type="password"
-              value={state.repeatedPassword}
-              onChange={handleChange}
-              autoComplete="off"
-            ></input>
-          </div>
-        </div>
-        <div className="update-btn">
-          <button className="save-btn" onClick={saveData}>
-            <p>Save</p>
-          </button>
-          <button className="cancel-btn" onClick={cancelChanges}>
-            <p>Cancel</p>
-          </button>
         </div>
         <Snackbar
-        sx={{
-          ".css-1eqdgzv-MuiPaper-root-MuiSnackbarContent-root": {
-            backgroundColor: "#FF3939",
-          },
-        }}
-        open={open}
-        autoHideDuration={5000}
-        onClose={handleClose}
-        message={errorMessage}
-        className="error-message"
-      />
+          sx={{
+            ".css-1eqdgzv-MuiPaper-root-MuiSnackbarContent-root": {
+              backgroundColor: "#FF3939",
+            },
+          }}
+          open={open}
+          autoHideDuration={5000}
+          onClose={handleClose}
+          message={errorMessage}
+          className="error-message"
+        />
       </div>
     </>
   );

@@ -15,13 +15,13 @@ function PreviewPage() {
 
     // important social media 
     const platforms = [
-        { platform: 'youtube', color: 'red', icon: 'ri-youtube-fill' },
-        { platform: 'github', color: 'black', icon: 'ri-github-fill' },
+        { platform: 'youtube', color: '#EE3939', icon: 'ri-youtube-fill' },
+        { platform: 'github', color: '#1A1A1A', icon: 'ri-github-fill' },
         { platform: 'instagram', color: '#E1306C', icon: 'ri-instagram-fill' },
-        { platform: 'facebook', color: '#1877F2', icon: 'ri-facebook-fill' },
-        { platform: 'twitter', color: '#1DA1F2', icon: 'ri-twitter-fill' },
-        { platform: 'linkedin', color: '#0077B5', icon: 'ri-linkedin-fill' },
-        { platform: 'other', color: 'grey', icon: 'ri-link' },
+        { platform: 'facebook', color: '#2442AC', icon: 'ri-facebook-fill' },
+        { platform: 'twitter', color: '#43B7E9', icon: 'ri-twitter-fill' },
+        { platform: 'linkedin', color: '#2D68FF', icon: 'ri-linkedin-fill' },
+        { platform: 'twitch', color: '#EE3FC8', icon: 'ri-link' },
 
     ];
     const navigate = useNavigate();
@@ -129,36 +129,35 @@ function PreviewPage() {
     };
 
     return (
-        <div style={{ background: 'var(--Light-Grey, #FAFAFA)' }}>
+        <div className='preview-page-container'>
             <div className='upper-container'>
                 <div className='btn-container'>
-                    <button className='back-btn' onClick={() => navigate(`/`)}>
+                    <button className='secondary-button' onClick={() => navigate(`/`)}>
                         <Link to={`${import.meta.env.VITE_BASE_URL}/`} />
-                        <p>Back to editor</p>
+                        Back to editor
                     </button>
-                    <button className='share-btn' onClick={handleShareLink}>
-                        <p>Publish</p>
+                    <button className='primary-button' onClick={handleShareLink}>
+                        Publish
                     </button>
                 </div>
             </div>
             <div>
                 <div className='info-container'>
-                    <div className='img-name'>
-                        <img src={userData?.profileImage} alt="Profile" />
-                        <h3>
+                <div className='img-name' style={{ backgroundImage: "url('/images/idir.png')" }}>               </div>
+                <h3>
                             {userData ? (
                                 userData.firstName && userData.lastName ?
                                     `${userData.firstName} ${userData.lastName}` :
                                     userData.userName
                             ) : 'Loading...'}
-                        </h3>                    </div>
+                        </h3>     
                     <div className='content-container'  >
                         {userContent && userContent.length > 0 ? (
                             userContent.map((content) => {
                                 const platformData = platforms.find(p => p.platform === content.platform.toLowerCase());
                                 return (
                                     <div onClick={() => handleRedirection(content.url)} key={content._id} className='content-item' style={{ backgroundColor: platformData ? platformData.color : 'grey' }}>
-                                        {platformData && <i className={platformData.icon} />}
+                                        {platformData && <img src={`/svg/${platformData.platform}-white-logo.svg`} alt="" />}
                                         <h4>{content.title}</h4>
 
                                         <i className="ri-arrow-right-line " style={{ color: 'white' }}></i>
@@ -190,7 +189,6 @@ function PreviewPage() {
             >
                 <h2>Share Your Link</h2>
                 <div className='copy-input'>
-
                     <input type="text" value={shareLink} ref={inputRef} readOnly />
                     <span onClick={copyToClipboard} ><i className="ri-links-line"></i></span>
                 </div>

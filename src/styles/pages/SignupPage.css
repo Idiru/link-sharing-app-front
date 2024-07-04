@@ -86,7 +86,7 @@ signup-form {
 @media (min-width: 768px) {
   .signup-container {
     width: 100vw;
-    height: 100vh;
+    height: 110vh;
     align-items: center;
     padding: 0;
     background-color: #fafafa;
