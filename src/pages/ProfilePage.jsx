@@ -1,25 +1,66 @@
-import "../styles/pages/ProfilePage.css";
-import { useNavigate } from "react-router-dom";
-import { useReducer, useEffect, useState, useRef } from "react";
-import { useParams } from "react-router-dom";
+import React, { useReducer, useEffect, useState, useRef } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
+import "../styles/pages/ProfilePage.css";
 import Snackbar from "@mui/material/Snackbar";
 
 function ProfilePage() {
   const navigate = useNavigate();
   const { id } = useParams();
 
+  const initState = {
+    userName: "",
+    firstName: "",
+    lastName: "",
+    email: "",
+    currentPassword: "",
+    newPassword: "",
+    repeatedPassword: "",
+    profileImage: null,
+  };
+
+  const reducer = (state, action) => {
+    if (action.type === "input") {
+      return { ...state, [action.field]: action.value };
+    } else if (action.type === "setUserData") {
+      return { ...state, ...action.payload };
+    }
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+
+  const handleSuccess = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setopenSuccess(false);
+  };
+
+  const [state, dispatch] = useReducer(reducer, initState);
+  const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState(undefined);
+  const [open, setOpen] = useState(false); //To handle the display of the error message toast
+  const [openSuccess, setopenSuccess] = useState(false); //To handle the display of the error message toast
+  const [succesMessage, setsuccesMessage] = useState(undefined);
+
+  const fileInputRef = useRef(null);
+
   const fetchUserData = async () => {
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_BASE_URL}/auth/users/${id}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-          },
-        }
-      );
+      const response = await fetch(`http://localhost:5005/auth/users/${id}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+        },
+      });
 
       if (response.ok) {
         const result = await response.json();
@@ -44,48 +85,10 @@ function ProfilePage() {
     }
   };
 
-  //To open/close the error message when the user click away
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
-    setOpen(false);
-  };
-
-  const initState = {
-    userName: "",
-    firstName: "",
-    lastName: "",
-    email: "",
-    currentPassword: "",
-    newPassword: "",
-    repeatedPassword: "",
-    profileImage: null,
-  };
-
-  const reducer = (state, action) => {
-    if (action.type === "input") {
-      return { ...state, [action.field]: action.value };
-    } else if (action.type === "setUserData") {
-      return { ...state, ...action.payload };
-    }
-  };
-
-  const [state, dispatch] = useReducer(reducer, initState);
-  const [loading, setLoading] = useState(true);
-  const [file, setFile] = useState(null);
-  const [filename, setFilename] = useState("Choose File");
-  const [profileImageUrl, setProfileImageUrl] = useState(null);
-  const fileInputRef = useRef(null);
-  const [errorMessage, setErrorMessage] = useState(undefined);
-  const [open, setOpen] = useState(false); //To handle the display of the error message toast
-
   useEffect(() => {
     const initializeUserData = async () => {
       const userData = await fetchUserData();
       dispatch({ type: "setUserData", payload: userData });
-      setProfileImageUrl(userData.profileImage); // Set profile image URL if it exists
       setLoading(false);
     };
     initializeUserData();
@@ -99,23 +102,11 @@ function ProfilePage() {
     });
   };
 
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
-    setFilename(e.target.files[0].name);
-
-    // Read selected file and set profile image URL for preview
-    const reader = new FileReader();
-    reader.onload = () => {
-      setProfileImageUrl(reader.result);
-    };
-    reader.readAsDataURL(e.target.files[0]);
-  };
-
   const handleClickUpload = () => {
     fileInputRef.current.click();
   };
 
-  const saveData = async (e) => {
+  const saveData = async () => {
     const {
       email,
       firstName,
@@ -131,34 +122,35 @@ function ProfilePage() {
       return setOpen(true);
     }
 
-    const data = new FormData();
-    data.append("profileImage", file);
-    data.append("email", email);
-    data.append("firstName", firstName);
-    data.append("lastName", lastName);
-    data.append("userName", userName);
-    data.append("currentPassword", currentPassword);
-    data.append("newPassword", newPassword);
+    const data = {
+      email,
+      firstName,
+      lastName,
+      userName,
+      currentPassword,
+      newPassword,
+      profileImage: state.profileImage, // Ensure to properly handle profile image data
+    };
 
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_BASE_URL}/auth/update/${id}`,
-        {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-          },
-          body: data,
-        }
-      );
+      const response = await fetch(`http://localhost:5005/auth/update/${id}`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
 
       if (response.ok) {
         const result = await response.json();
         console.log("User updated successfully:", result);
-        if (result.user.profileImage) {
-          setProfileImageUrl(result.user.profileImage);
-        }
-        window.location.reload();
+         // Consider better ways to handle state update after successful update
+        setsuccesMessage("All changes saved successfully.");
+        setopenSuccess(true)
+        setTimeout(() => {
+            window.location.reload();
+          }, 1000);
       } else {
         const errorData = await response.json();
         console.error("Failed to update user:", errorData.message);
@@ -172,129 +164,153 @@ function ProfilePage() {
     }
   };
 
-  const cancelChanges = (e) => {
+  const cancelChanges = () => {
     navigate("/");
+  };
+
+  // Check if data is still loading
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  // image uploading
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append("profileImage", file);
+
+    try {
+      const response = await fetch("http://localhost:5005/user/upload", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+        },
+        body: formData,
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        dispatch({
+          type: "input",
+          field: "profileImage",
+          value: result.profileImage,
+        });
+        console.log(result.profileImage);
+      } else {
+        const errorData = await response.json();
+        console.error("Failed to upload image:", errorData.message);
+        alert("Failed to upload image");
+      }
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      alert("Error uploading image");
+    }
   };
 
   return (
     <>
       <Navbar />
-      <div className="profil-page-container">
-        <div className="update-info-container">
-          <div>
-            <h1 className="profile-details-header">Profile details</h1>
-            <p className="profile-details-description">
-              Add your details to create a personal touch to your profile.
-            </p>
-          </div>
-          <div className="pic-container profile-block">
-            <p className="profile-pic-text">Profile picture</p>
-            <div className="pic-container-right">
-              <section onClick={handleClickUpload}>
-                <div>
-                  {profileImageUrl ? (
-                    <img src={profileImageUrl} alt="Profile" />
-                  ) : (
-                    <img
-                      src="../src/assets/Images/ph_image.svg"
-                      alt="Placeholder"
-                    />
-                  )}
-                </div>
-                <h5>Upload image</h5>
-              </section>
+      <div className="update-info-container">
+        <h1 className="profile-details-header">Profile Details</h1>
+        <div className="pic-container">
+          <p className="profile-pic-text">Profile picture</p>
+          <div className="pic-container-right">
+            <section onClick={handleClickUpload}>
+              <img
+                src={state.profileImage}
+                alt="Profile"
+                className="profile-image"
+              />
+              <h5>Upload image</h5>
               <input
                 type="file"
                 ref={fileInputRef}
                 style={{ display: "none" }}
-                onChange={handleFileChange}
-                required
+                onChange={handleFileUpload}
               />
-              <label>
-                <p>Image must be below 1024x1024px. Use PNG or JPG format.</p>
-              </label>
-            </div>
+            </section>
+            <label>
+              <p>Image must be below 1024x1024px. Use PNG or JPG format.</p>
+            </label>
           </div>
-          <div className="general-data-container">
-            <div className="profile-page-input-container">
-              <label>User name*</label>
-              <div>
-                <input
-                  placeholder="e.g.amazing_john"
-                  name="userName"
-                  value={state.userName}
-                  onChange={handleChange}
-                ></input>
-              </div>
-            </div>
-            <div className="profile-page-input-container">
-              <label>First name</label>
-              <input
-                placeholder="e.g.john"
-                name="firstName"
-                value={state.firstName}
-                onChange={handleChange}
-              ></input>
-            </div>
-            <div className="profile-page-input-container">
-              <label>Last name</label>
-              <input
-                placeholder="e.g. Appleseed"
-                name="lastName"
-                value={state.lastName}
-                onChange={handleChange}
-              ></input>
-            </div>
-            <div className="profile-page-input-container">
-              <label>Email*</label>
-              <input
-                placeholder="e.g. email@example.com"
-                name="email"
-                value={state.email}
-                onChange={handleChange}
-              ></input>
-            </div>
+        </div>
+        <div className="general-data-container">
+          <div className="input-container">
+            <label>User Name</label>
+            <input
+              placeholder="e.g.amazing_john"
+              name="userName"
+              value={state.userName || ""} // Ensure value is not undefined
+              onChange={handleChange}
+            ></input>
           </div>
-          <div className="general-data-container">
-            <div className="profile-page-input-container">
-              <label>Current password</label>
-              <input
-                name="currentPassword"
-                type="password"
-                value={state.currentPassword}
-                onChange={handleChange}
-                autoComplete="off"
-              ></input>
-            </div>
-            <div className="profile-page-input-container">
-              <label>New password</label>
-              <input
-                name="newPassword"
-                type="password"
-                value={state.newPassword}
-                onChange={handleChange}
-                autoComplete="off"
-              ></input>
-            </div>
-            <div className="profile-page-input-container">
-              <label>Confirm new password</label>
-              <input
-                name="repeatedPassword"
-                type="password"
-                value={state.repeatedPassword}
-                onChange={handleChange}
-                autoComplete="off"
-              ></input>
-            </div>
+          <div className="input-container">
+            <label>First Name</label>
+            <input
+              placeholder="e.g.john"
+              name="firstName"
+              value={state.firstName || ""}
+              onChange={handleChange}
+            ></input>
           </div>
-          <div className="update-btn">
-            <button className="primary-button" onClick={saveData}>
-              Save
-            </button>
-            <button className="secondary-button" onClick={cancelChanges}>
-              Cancel
-            </button>
+          <div className="input-container">
+            <label>Last Name</label>
+            <input
+              placeholder="e.g. Appleseed"
+              name="lastName"
+              value={state.lastName || ""}
+              onChange={handleChange}
+            ></input>
           </div>
+          <div className="input-container">
+            <label>Email</label>
+            <input
+              placeholder="e.g. email@example.com"
+              name="email"
+              value={state.email || ""}
+              onChange={handleChange}
+            ></input>
+          </div>
+        </div>
+        <div className="general-data-container">
+          <div className="input-container">
+            <label>Current Password</label>
+            <input
+              name="currentPassword"
+              type="password"
+              value={state.currentPassword || ""}
+              onChange={handleChange}
+              autoComplete="off"
+            ></input>
+          </div>
+          <div className="input-container">
+            <label>New Password</label>
+            <input
+              name="newPassword"
+              type="password"
+              value={state.newPassword || ""}
+              onChange={handleChange}
+              autoComplete="off"
+            ></input>
+          </div>
+          <div className="input-container">
+            <label>Confirm New Password</label>
+            <input
+              name="repeatedPassword"
+              type="password"
+              value={state.repeatedPassword || ""}
+              onChange={handleChange}
+              autoComplete="off"
+            ></input>
+          </div>
+        </div>
+        <div className="update-btn">
+          <button className="save-btn" onClick={saveData}>
+            <p>Save</p>
+          </button>
+          <button className="cancel-btn" onClick={cancelChanges}>
+            <p>Cancel</p>
+          </button>
         </div>
         <Snackbar
           sx={{
@@ -308,6 +324,16 @@ function ProfilePage() {
           message={errorMessage}
           className="error-message"
         />
+              <Snackbar
+        sx={{
+          ".css-1eqdgzv-MuiPaper-root-MuiSnackbarContent-root": {
+          },
+        }}
+        open={openSuccess}
+        autoHideDuration={5000}
+        onClose={handleSuccess}
+        message={succesMessage}
+      />
       </div>
     </>
   );

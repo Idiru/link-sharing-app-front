@@ -143,7 +143,7 @@ function PreviewPage() {
             </div>
             <div>
                 <div className='info-container'>
-                <div className='img-name' style={{ backgroundImage: "url('/images/idir.png')" }}>               </div>
+                <div className='img-name' style={{ backgroundImage: `url(${userData?.profileImage})` }}>               </div>
                 <h3>
                             {userData ? (
                                 userData.firstName && userData.lastName ?
