@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import Snackbar from "@mui/material/Snackbar";
 
 
+
 Modal.setAppElement('#root');
 
 function PreviewPage() {
@@ -17,7 +18,7 @@ function PreviewPage() {
     const platforms = [
         { platform: 'youtube', color: '#EE3939', icon: 'ri-youtube-fill' },
         { platform: 'github', color: '#1A1A1A', icon: 'ri-github-fill' },
-        { platform: 'instagram', color: '#E1306C', icon: 'ri-instagram-fill' },
+        { platform: 'other', color: '#737373', icon: 'ri-instagram-fill' },
         { platform: 'facebook', color: '#2442AC', icon: 'ri-facebook-fill' },
         { platform: 'twitter', color: '#43B7E9', icon: 'ri-twitter-fill' },
         { platform: 'linkedin', color: '#2D68FF', icon: 'ri-linkedin-fill' },
@@ -187,7 +188,7 @@ function PreviewPage() {
                 className="modal"
                 overlayClassName="modal-overlay"
             >
-                <h2>Share Your Link</h2>
+                <h2>Share your link</h2>
                 <div className='copy-input'>
                     <input type="text" value={shareLink} ref={inputRef} readOnly />
                     <span onClick={copyToClipboard} ><i className="ri-links-line"></i></span>

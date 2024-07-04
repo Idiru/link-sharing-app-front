@@ -249,6 +249,10 @@
     background: #43B7E9;
   }
 
+  .other {
+    background: #737373;
+  }
+
   .builderpage-content-builder-container {
     max-height: 450px;
     overflow: auto;

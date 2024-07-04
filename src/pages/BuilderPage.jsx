@@ -313,6 +313,7 @@ function BuilderPage() {
                             <option value="linkedin">Linkedin</option>
                             <option value="facebook">Facebook</option>
                             <option value="twitch">Twitch</option>
+                            <option value="other">Other</option>
                           </select>
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
