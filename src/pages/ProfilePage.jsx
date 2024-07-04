@@ -199,11 +199,13 @@ function ProfilePage() {
       } else {
         const errorData = await response.json();
         console.error("Failed to upload image:", errorData.message);
-        alert("Failed to upload image");
+        setErrorMessage("Failed to upload image");
+        return setOpen(true);
       }
     } catch (error) {
       console.error("Error uploading image:", error);
-      alert("Error uploading image");
+      setErrorMessage("Error uploading image");
+      return setOpen(true);
     }
   };
 
