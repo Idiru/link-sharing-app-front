@@ -180,7 +180,7 @@ function ProfilePage() {
     formData.append("profileImage", file);
 
     try {
-      const response = await fetch("${import.meta.env.VITE_BASE_URL}/user/upload", {
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/user/upload`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("authToken")}`,
