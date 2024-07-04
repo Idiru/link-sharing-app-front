@@ -71,6 +71,63 @@
   animation: vibration-horizontale 0.3s linear infinite;
 }
 
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 7;
+  width: 80%;
+  max-width: 500px;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 6;
+}
+
+.copy-input {
+  display: flex;
+  align-items: center;
+  padding: 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.copy-input input[type="text"] {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+.copy-input span {
+  background-color: var(--Purple, #633cff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  cursor: pointer;
+  height: 100%;
+}
+
+.copy-input span i {
+  color: white;
+  font-size: 20px;
+}
+
 
 @media (min-width: 768px) {
   .preview-page-container {

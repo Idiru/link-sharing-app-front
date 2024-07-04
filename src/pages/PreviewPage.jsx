@@ -110,9 +110,9 @@ function PreviewPage() {
                 const result = await response.json();
                 console.log('Content published successfully');
                 setShareLink(`${import.meta.env.VITE_BASE_URL_FRONT}/devlinks/${userData.userName}`);
-                setModalIsOpen(true);
                 setsuccesMessage("All changes published successfully.");
                 setOpen(true);
+                setModalIsOpen(true);
             } else {
                 console.error('Failed to publish content');
             }
