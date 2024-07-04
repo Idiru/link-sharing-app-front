@@ -88,7 +88,7 @@ function VisitorsPage() {
 
   return (
     <div className="preview-page-container">
-      <div className="upper-container"></div>
+      <div className="upper-container visitor-upper"></div>
       <div>
         <div className="info-container">
           <div

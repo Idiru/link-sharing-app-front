@@ -140,6 +140,12 @@
     
   }
 
+  .visitor-upper {
+    background-color: #633cff;
+    height: 357px;
+    
+  }
+
   .btn-container {
     border-radius: 12px;
     background: var(--White, #fff);
