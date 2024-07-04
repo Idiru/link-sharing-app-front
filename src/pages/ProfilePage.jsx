@@ -184,12 +184,14 @@ function ProfilePage() {
         method: "POST",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          "Cache-Control": "no-cache",
         },
         body: formData,
       });
 
       if (response.ok) {
         const result = await response.json();
+        console.log(result)
         dispatch({
           type: "input",
           field: "profileImage",
