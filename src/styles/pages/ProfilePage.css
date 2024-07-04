@@ -37,6 +37,7 @@ body {
   justify-content: center;
   align-items: center;
 }
+
 .update-info-container section h5 {
   color: var(--Purple, #633cff);
   font-family: "Instrument Sans";
@@ -56,13 +57,29 @@ body {
   width: 100px;
   border-radius: 10px;
 }
+
+.pic-container-right-image {
+  display: flex;
+  width: 116px;
+  height: 72px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 12px;
+  background: #efebff;
+  background-size: cover;
+}
+
 .pic-container-right p {
-  color: var(--Grey, #737373);
+  color: var(--Grey, #110a0a);
   font-family: "Instrument Sans";
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
   line-height: 150%;
+}
+
+.uploaded {
+  color: #FFF !important;
 }
 .general-data-container {
   display: flex;
