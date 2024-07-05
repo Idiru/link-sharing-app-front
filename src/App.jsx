@@ -8,7 +8,7 @@ import UpdateUserPage from './pages/UpdateUserPage'
 import BuilderPage from './pages/BuilderPage'
 import VisitorsPage from './pages/VisitorsPage'
 import Private from './components/Private'
-import PreviewPage from './pages/PreviewPage'
+import ProfilePage from './pages/PreviewPage'
 import AnalyticsPage from './pages/AnalyticsPage'
 
 function App() {
@@ -20,7 +20,7 @@ function App() {
         <Route path='/login' element={<LoginPage />} />
         <Route path='/signup' element={<SignupPage />} />
         <Route path='/signup-validation' element={<SignupValidationPage />} />
-        <Route path='/update/:id' element={<Private><UpdateUserPage /></Private>} />
+        <Route path='/profile/:id' element={<Private><ProfilePage /></Private>} />
         <Route path='/' element={<Private><BuilderPage /></Private>} />
         <Route path='/devlinks/:userName' element={<VisitorsPage />} />
         <Route path='/:id/preview' element={<PreviewPage />} />

@@ -1,7 +1,7 @@
 import React, { useReducer, useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
-import '../styles/pages/UpdateUserPage.css';
+import '../styles/pages/ProfilePage.css';
 
 function UpdateUserPage() {
     const navigate = useNavigate();
