@@ -147,11 +147,12 @@ function PreviewPage() {
                   <div className='content-item' style={{ backgroundColor: platformData ? platformData.color : 'grey' }}>
                     {platformData && <i className={platformData.icon} style={{ color: 'white' }} />}
                     <h4>{content.title}</h4>
-                    <div >
-                      <i class="ri-bar-chart-2-line" style={{ color: 'white', }} onClick={() => handleAnalytics(content._id)} key={content._id} ></i>
-                      <i className="ri-arrow-right-line " style={{ color: 'white', paddingLeft: '5px' }} onClick={() => handleRedirection(content.url)} key={content._id}></i>
+                    <div>
+                      <i className="ri-bar-chart-2-line" style={{ color: 'white' }} onClick={() => handleAnalytics(content._id)} key={content._id}></i>
+                      <i className="ri-arrow-right-line" style={{ color: 'white', paddingLeft: '5px' }} onClick={() => handleRedirection(content.url)} key={content._id}></i>
                     </div>
                   </div>
+
                 );
               })
             ) : (
