@@ -84,7 +84,7 @@ function VisitorsPage() {
       }
 
       // Redirect to the URL
-      window.location.href = url;
+      window.open(url, '_blank');
     } catch (error) {
       console.error('Error handling click:', error);
     }

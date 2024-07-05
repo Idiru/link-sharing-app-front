@@ -94,6 +94,7 @@ function PreviewPage() {
       if (response.ok) {
         const result = await response.json();
         console.log('Content published successfully');
+        console.log(result)
         setShareLink(`${import.meta.env.VITE_BASE_URL_FRONT}/devlinks/${userData.userName}`);
         setModalIsOpen(true);
       } else {

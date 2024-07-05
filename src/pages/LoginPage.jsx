@@ -56,7 +56,7 @@ function LoginPage() {
       .catch((error) => {
         const errorDescription = error.response.data.message;
         setErrorMessage(errorDescription);
-        setOpen(true);
+        setOpen(true)
       });
   };
 
