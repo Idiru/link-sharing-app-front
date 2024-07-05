@@ -133,98 +133,67 @@ function PreviewPage() {
     }
   };
 
-  return (
-    <div className="preview-page-container">
-      <div className="upper-container">
-        <div className="btn-container">
-          <button className="secondary-button" onClick={() => navigate(`/`)}>
-            <Link to={`${import.meta.env.VITE_BASE_URL}/`} />
-            Back to editor
-          </button>
-          <button className="primary-button" onClick={handleShareLink}>
-            Publish
-          </button>
-        </div>
-      </div>
-      <div>
-        <div className="info-container">
-          {userData?.profileImage ? (
-            <div
-              className="img-name"
-              style={{ backgroundImage: `url(${userData?.profileImage})` }}
-            ></div>
-          ) : null}{" "}
-          <h3>
-            {userData
-              ? userData.firstName && userData.lastName
-                ? `${userData.firstName} ${userData.lastName}`
-                : userData.userName
-              : "Loading..."}
-          </h3>
-          <div className="content-container">
-            {userContent && userContent.length > 0 ? (
-              userContent.map((content) => {
-                const platformData = platforms.find(
-                  (p) => p.platform === content.platform.toLowerCase()
-                );
-                return (
-                  <div
-                    onClick={() => handleRedirection(content.url)}
-                    key={content._id}
-                    className="content-item"
-                    style={{
-                      backgroundColor: platformData
-                        ? platformData.color
-                        : "grey",
-                    }}
-                  >
-                    {platformData && (
-                      <img
-                        src={`/svg/${platformData.platform}-white-logo.svg`}
-                        alt="logo"
-                      />
-                    )}
-                    <h4>{content.title}</h4>
+    return (
+        <div style={{ background: 'var(--Light-Grey, #FAFAFA)' }}>
+            <div className='upper-container'>
+                <div className='btn-container'>
+                    <button className='back-btn' onClick={() => navigate(`/`)}>
+                        <Link to={`${import.meta.env.VITE_BASE_URL}/`} />
+                        <p>Back To Editor</p>
+                    </button>
+                    <button className='share-btn' onClick={handleShareLink}>
+                        <p>Publish</p>
+                    </button>
+                </div>
+            </div>
+            <div>
+                <div className='info-container'>
+                    <div className='img-name'>
+                        <img src={userData?.profileImage} alt="Profile" />
+                        <h3>
+                            {userData ? (
+                                userData.firstName && userData.lastName ?
+                                    `${userData.firstName} ${userData.lastName}` :
+                                    userData.userName
+                            ) : 'Loading...'}
+                        </h3>                    </div>
+                    <div className='content-container'  >
+                        {userContent && userContent.length > 0 ? (
+                            userContent.map((content) => {
+                                const platformData = platforms.find(p => p.platform === content.platform.toLowerCase());
+                                return (
+                                    <div className='content-item' style={{ backgroundColor: platformData ? platformData.color : 'grey' }}>
+                                        {platformData && <i className={platformData.icon} style={{ color: 'white' }} />}
+                                        <h4>{content.title}</h4>
+                                        <div >
+                                            <i class="ri-bar-chart-2-line" style={{ color: 'white', }} onClick={() => handleAnalytics(content._id)} key={content._id} ></i>
+                                            <i className="ri-arrow-right-line " style={{ color: 'white', paddingLeft: '5px' }} onClick={() => handleRedirection(content.url)} key={content._id}></i>
+                                        </div>
+                                    </div>
+                                );
+                            })
+                        ) : (
+                            <p>No content available here</p>
+                        )}
+                    </div>
+                </div>
+            </div>
+            <Modal
+                isOpen={modalIsOpen}
+                onRequestClose={() => setModalIsOpen(false)}
+                contentLabel="Share Link Modal"
+                className="modal"
+                overlayClassName="modal-overlay"
+            >
+                <h2>Share Your Link</h2>
+                <div className='copy-input'>
 
-                    <i
-                      className="ri-arrow-right-line "
-                      style={{ color: "white" }}
-                    ></i>
-                  </div>
-                );
-              })
-            ) : (
-              <p>No content available</p>
-            )}
-          </div>
+                    <input type="text" value={shareLink} ref={inputRef} readOnly />
+                    <span onClick={copyToClipboard} ><i className="ri-links-line"></i></span>
+                </div>
+            </Modal>
         </div>
-      </div>
-      <Snackbar
-        sx={{
-          ".css-1eqdgzv-MuiPaper-root-MuiSnackbarContent-root": {},
-        }}
-        open={open}
-        autoHideDuration={5000}
-        onClose={handleClose}
-        message={succesMessage}
-      />
-      <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={() => setModalIsOpen(false)}
-        contentLabel="Share Link Modal"
-        className="modal"
-        overlayClassName="modal-overlay"
-      >
-        <h2>Share your link</h2>
-        <div className="copy-input">
-          <input type="text" value={shareLink} ref={inputRef} readOnly />
-          <span onClick={copyToClipboard}>
-            <i className="ri-links-line"></i>
-          </span>
-        </div>
-      </Modal>
-    </div>
-  );
+    );
 }
 
 export default PreviewPage;
