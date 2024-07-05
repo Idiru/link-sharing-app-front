@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
 import '../styles/pages/PreviewPage.css';
 import 'remixicon/fonts/remixicon.css';
-import Modal from 'react-modal';
 
 function VisitorsPage() {
   const inputRef = useRef(null); // ref for the input field
@@ -53,29 +52,43 @@ function VisitorsPage() {
 
   const handleRedirection = async (contentId, url) => {
     try {
-      // Send POST request to record the click
-      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/clicks`, {
+      // Fetch visitor's IP address
+      const ipResponse = await fetch('https://api64.ipify.org?format=json');
+      if (!ipResponse.ok) {
+        throw new Error('Failed to fetch IP address');
+      }
+      const { ip } = await ipResponse.json();
+
+      // Fetch visitor's country based on IP address
+      const countryResponse = await fetch(`https://ipapi.co/${ip}/json/`);
+      if (!countryResponse.ok) {
+        throw new Error('Failed to fetch country');
+      }
+      const { country } = await countryResponse.json();
+      console.log('Visitor Country:', country);
+
+      // Send POST request to record the click and store country
+      const clickResponse = await fetch(`${import.meta.env.VITE_BASE_URL}/clicks`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('authToken')}`
         },
-        body: JSON.stringify({ contentId })
+        body: JSON.stringify({ contentId, country })
       });
 
-      if (response.ok) {
-        console.log('Click recorded');
+      if (clickResponse.ok) {
+        console.log('Click recorded and country stored');
       } else {
-        console.error('Failed to record click');
+        console.error('Failed to record click and store country');
       }
 
       // Redirect to the URL
       window.location.href = url;
     } catch (error) {
-      console.error('Error recording click:', error);
+      console.error('Error handling click:', error);
     }
   };
-
 
   return (
     <div style={{ background: 'var(--Light-Grey, #FAFAFA)' }}>
@@ -116,7 +129,8 @@ function VisitorsPage() {
           </div>
         </div>
       </div>
-    </div >
+    </div>
+
   );
 }
 
