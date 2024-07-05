@@ -8,7 +8,7 @@ import ProfilePage from './pages/ProfilePage'
 import BuilderPage from './pages/BuilderPage'
 import VisitorsPage from './pages/VisitorsPage'
 import Private from './components/Private'
-import ProfilePage from './pages/PreviewPage'
+import PreviewPage from './pages/PreviewPage'
 import AnalyticsPage from './pages/AnalyticsPage'
 
 function App() {
