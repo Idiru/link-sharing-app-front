@@ -1,8 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import "../styles/pages/PreviewPage.css";
-import "remixicon/fonts/remixicon.css";
-import { jwtDecode } from "jwt-decode";
+import '../styles/pages/PreviewPage.css';
+import 'remixicon/fonts/remixicon.css';
 
 function VisitorsPage() {
   const inputRef = useRef(null); // ref for the input field
@@ -82,8 +81,44 @@ function VisitorsPage() {
     fetchUserContent();
   }, []);
 
-  const handleRedirection = (url) => {
-    window.location.href = url;
+  const handleRedirection = async (contentId, url) => {
+    try {
+      // Fetch visitor's IP address
+      const ipResponse = await fetch('https://api64.ipify.org?format=json');
+      if (!ipResponse.ok) {
+        throw new Error('Failed to fetch IP address');
+      }
+      const { ip } = await ipResponse.json();
+
+      // Fetch visitor's country based on IP address
+      const countryResponse = await fetch(`https://ipapi.co/${ip}/json/`);
+      if (!countryResponse.ok) {
+        throw new Error('Failed to fetch country');
+      }
+      const { country } = await countryResponse.json();
+      console.log('Visitor Country:', country);
+
+      // Send POST request to record the click and store country
+      const clickResponse = await fetch(`${import.meta.env.VITE_BASE_URL}/clicks`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+        },
+        body: JSON.stringify({ contentId, country })
+      });
+
+      if (clickResponse.ok) {
+        console.log('Click recorded and country stored');
+      } else {
+        console.error('Failed to record click and store country');
+      }
+
+      // Redirect to the URL
+      window.location.href = url;
+    } catch (error) {
+      console.error('Error handling click:', error);
+    }
   };
 
   return (
@@ -111,15 +146,12 @@ function VisitorsPage() {
                   (p) => p.platform === content.platform.toLowerCase()
                 );
                 return (
-                  <div
-                    onClick={() => handleRedirection(content.url)}
-                    key={content._id}
-                    className="content-item"
-                    style={{
-                      backgroundColor: platformData
-                        ? platformData.color
-                        : "grey",
-                    }}
+
+                  < div key={content._id}
+                    onClick={() => handleRedirection(content._id, content.url)}
+
+                    className='content-item'
+                    style={{ backgroundColor: platformData ? platformData.color : 'grey' }}
                   >
                     {platformData && (
                       <img
@@ -143,6 +175,7 @@ function VisitorsPage() {
         </div>
       </div>
     </div>
+
   );
 }
 

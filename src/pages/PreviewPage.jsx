@@ -11,18 +11,20 @@ Modal.setAppElement("#root");
 function PreviewPage() {
   const inputRef = useRef(null); // ref for the input field
 
-  // important social media
-  const platforms = [
-    { platform: "youtube", color: "#EE3939", icon: "ri-youtube-fill" },
-    { platform: "github", color: "#1A1A1A", icon: "ri-github-fill" },
-    { platform: "other", color: "#737373", icon: "ri-instagram-fill" },
-    { platform: "facebook", color: "#2442AC", icon: "ri-facebook-fill" },
-    { platform: "twitter", color: "#43B7E9", icon: "ri-twitter-fill" },
-    { platform: "linkedin", color: "#2D68FF", icon: "ri-linkedin-fill" },
-    { platform: "twitch", color: "#EE3FC8", icon: "ri-link" },
-  ];
-  const navigate = useNavigate();
-  const { id } = useParams();
+    // important social media 
+    const platforms = [
+        { platform: 'youtube', color: 'red', icon: 'ri-youtube-fill' },
+        { platform: 'github', color: 'black', icon: 'ri-github-fill' },
+        { platform: 'instagram', color: '#E1306C', icon: 'ri-instagram-fill' },
+        { platform: 'facebook', color: '#1877F2', icon: 'ri-facebook-fill' },
+        { platform: 'twitter', color: '#1DA1F2', icon: 'ri-twitter-fill' },
+        { platform: 'linkedin', color: '#0077B5', icon: 'ri-linkedin-fill' },
+        { platform: 'other', color: 'grey', icon: 'ri-link' },
+
+    ];
+    const navigate = useNavigate();
+    const navigateToPerformance = useNavigate()
+    const { id } = useParams();
 
   const [userData, setUserData] = useState(null);
   const [userContent, setUserContent] = useState([]);
@@ -94,21 +96,18 @@ function PreviewPage() {
     fetchUserContent();
   }, []);
 
-  const handleRedirection = (url) => {
-    window.location.href = url;
-  };
-  const handleShareLink = async () => {
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_BASE_URL}/content/users/${id}/publish`,
-        {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+    const handleRedirection = (url) => {
+        window.open(url, '_blank');
+    };
+    const handleShareLink = async () => {
+        try {
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/content/users/${id}/publish`, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+                    'Content-Type': 'application/json'
+                }
+            });
 
       if (response.ok) {
         const result = await response.json();
