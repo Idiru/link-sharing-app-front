@@ -163,8 +163,7 @@ function AnalyticsPage() {
     // Return the JSX of the component
     return (
         <div className="analytics-page">
-            <h2>Analytics Page</h2>
-            <p>Content ID: {contentId}</p>
+            <h2>Performance of Your Link</h2>
             {loading ? (
                 <p>Loading...</p>
             ) : error ? (

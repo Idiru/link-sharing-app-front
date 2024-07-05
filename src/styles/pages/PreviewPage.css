@@ -1,8 +1,9 @@
 .body {
   margin: 0;
   max-width: 100%;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
 }
-.upper-container {
+ .upper-container {
   display: flex;
   flex-direction: column;
   height: 357px;
@@ -33,7 +34,6 @@
 }
 .share-btn p {
   color: var(--White, #fff);
-
   font-family: "Instrument Sans";
   font-size: 16px;
   font-style: normal;
@@ -56,6 +56,8 @@
   font-weight: 600;
   line-height: 150%;
 }
+@media (min-width: 575.98px) {
+
 .info-container {
   z-index: 2;
   position: relative;
@@ -71,7 +73,8 @@
   background: #fff;
   box-shadow: 0px 0px 32px 0px rgba(0, 0, 0, 0.1);
   margin: auto;
-}
+} 
+} 
 .img-name {
   display: flex;
   flex-direction: column;
@@ -99,17 +102,14 @@
   flex-direction: column;
   align-items: center;
 }
-
 .img-name {
   text-align: center;
 }
-
 .img-name img {
   border-radius: 50%;
   width: 100px;
   height: 100px;
 }
-
 .content-container {
   display: flex;
   flex-direction: column;
@@ -117,7 +117,6 @@
   gap: 20px;
   width: 100%;
 }
-
 .content-container .content-item {
   display: flex;
   align-items: center;
@@ -131,7 +130,6 @@
   display: flex;
   justify-content: space-between;
 }
-
 .content-item h4 {
   color: var(--White, #fff);
   font-family: "Instrument Sans";
@@ -153,7 +151,6 @@
   width: 80%;
   max-width: 500px;
 }
-
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -163,7 +160,6 @@
   background: rgba(0, 0, 0, 0.7);
   z-index: 6;
 }
-
 .copy-input {
   display: flex;
   align-items: center;
@@ -172,7 +168,6 @@
   border-radius: 5px;
   overflow: hidden;
 }
-
 .copy-input input[type="text"] {
   flex: 1;
   padding: 10px;
@@ -181,7 +176,6 @@
   font-size: 16px;
   box-sizing: border-box;
 }
-
 .copy-input span {
   background-color: var(--Purple, #633cff);
   display: flex;
@@ -191,7 +185,6 @@
   cursor: pointer;
   height: 100%;
 }
-
 .copy-input span i {
   color: white;
   font-size: 20px;
@@ -200,7 +193,6 @@
   .info-container {
     z-index: 2;
     position: relative;
-    top: -150px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -210,10 +202,35 @@
     width: 70vw;
     border-radius: 24px;
     background: #fff;
-    box-shadow: 0px 0px 32px 0px rgba(0, 0, 0, 0.1);
     margin: auto;
   }
   .upper-container {
+    height: 80px;
+    width: 100%;
+    background: white;
+  }
+  .content-container {
     width: 100%;
   }
+}
+
+/* Add these at the end */
+@keyframes bounce {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+.content-container .content-item:hover {
+  animation: bounce 1s;
 }
