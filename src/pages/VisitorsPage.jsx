@@ -117,7 +117,7 @@ function VisitorsPage() {
                     className='content-item'
                     style={{ backgroundColor: platformData ? platformData.color : 'grey' }}
                   >
-                    {platformData && <i className={platformData.icon} />}
+                    {platformData && <i className={platformData.icon} style={{ color: 'white' }} />}
                     <h4>{content.title}</h4>
                     <i className="ri-arrow-right-line" style={{ color: 'white' }}></i>
                   </div>
