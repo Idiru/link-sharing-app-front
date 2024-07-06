@@ -53,7 +53,7 @@ function ProfilePage() {
     };
     const fetchUserData = async () => {
         try {
-            const response = await fetch(`http://localhost:5005/auth/users/${id}`, {
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/users/${id}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('authToken')}`
