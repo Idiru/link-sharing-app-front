@@ -159,6 +159,16 @@ body {
   font-weight: 600;
   line-height: 150%;
 }
+
+.ri-bar-chart-2-line {
+  cursor: pointer;
+}
+
+.ri-arrow-right-line {
+  cursor: pointer;
+
+}
+
 @media only screen and (max-width: 600px) {
   .pic-container {
     display: flex;
