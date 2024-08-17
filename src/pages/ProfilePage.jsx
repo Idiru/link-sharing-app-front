@@ -3,6 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import '../styles/pages/ProfilePage.css';
 import Snackbar from "@mui/material/Snackbar";
+import { fetchUserData } from "../utils/fetchUserData";
+
 
 
 function ProfilePage() {
@@ -51,32 +53,10 @@ function ProfilePage() {
 
         setopenSuccess(false);
     };
-    const fetchUserData = async () => {
-        try {
-            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/users/${id}`, {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-                }
-            });
-
-            if (response.ok) {
-                const result = await response.json();
-                const { email, firstName, lastName, userName } = result.user;
-                return { email, firstName, lastName, userName, currentPassword: '', newPassword: '', repeatedPassword: '', profileImage: result.user.profileImage };
-            } else {
-                console.error('Failed to fetch user data');
-                return initState;
-            }
-        } catch (error) {
-            console.error('Error fetching user data:', error);
-            return initState;
-        }
-    };
 
     useEffect(() => {
         const initializeUserData = async () => {
-            const userData = await fetchUserData();
+            const userData = await fetchUserData(id);
             dispatch({ type: 'setUserData', payload: userData });
             setLoading(false);
         };
