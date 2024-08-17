@@ -1,10 +1,10 @@
 import React from "react";
 
-export default function ({platform, title}) {
+export default function (props) {
   return (
-    <div className={`block ${platform}`}>
-      <img src={`./svg/${platform}-white-logo.svg`} alt="logo" />
-      <p>{title}</p>
+    <div className={`block ${props.platform}`}>
+      <img src={`./svg/${props.platform}-white-logo.svg`} alt="logo" />
+      <p>{props.title}</p>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="12"
