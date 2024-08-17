@@ -6,6 +6,7 @@ import { jwtDecode } from "jwt-decode";
 import { v4 as uuidv4 } from "uuid";
 import { useNavigate } from "react-router-dom";
 import Snackbar from "@mui/material/Snackbar";
+import PhonePreviewBlock from "../components/PhonePreviewBlock";
 
 function BuilderPage() {
   const [isLoading, setIsLoading] = useState(false); //Display the loading screen waiting for the data
@@ -216,25 +217,7 @@ function BuilderPage() {
             <div className="builderpage-preview-phone-blocks-container">
               {content.map((item) =>
                 item.state !== "deleted" ? (
-                  <div className={`block ${item.platform}`}>
-                    <img
-                      src={`./svg/${item.platform}-white-logo.svg`}
-                      alt="logo"
-                    />
-                    <p>{item.title}</p>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="12"
-                      height="12"
-                      viewBox="0 0 12 12"
-                      fill="none"
-                    >
-                      <path
-                        d="M0.666626 5.3333V6.66664H8.66663L4.99996 10.3333L5.94663 11.28L11.2266 5.99997L5.94663 0.719971L4.99996 1.66664L8.66663 5.3333H0.666626Z"
-                        fill="white"
-                      />
-                    </svg>
-                  </div>
+                  <PhonePreviewBlock platform={item.platform} title={item.title} key={item._id}/>
                 ) : (
                   ""
                 )
